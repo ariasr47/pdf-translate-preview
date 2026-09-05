@@ -1,0 +1,16 @@
+{
+  "contents": "portable skill source, original and third-party license notices, public documentation",
+  "distribution": "experimental source-only preview",
+  "excluded": [
+    "development Git history",
+    "PDF fixtures",
+    "fonts",
+    "dependency binaries",
+    "private logs",
+    "credentials",
+    "virtual environments"
+  ],
+  "qualification": "See docs/SUPPORT.md; a checksum is not a human or platform qualification.",
+  "schema_version": "1.0",
+  "version": "50.0.0"
+}

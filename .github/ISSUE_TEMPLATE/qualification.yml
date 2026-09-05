@@ -1,0 +1,28 @@
+name: Qualification result
+description: Record an actual platform/viewer/review check and its limitations.
+title: "[Qualification] "
+body:
+  - type: markdown
+    attributes:
+      value: "Use docs/review protocols. Submit only consented, non-confidential results. A completed checklist is not a universal compatibility claim. Do not upload real documents or raw logs."
+  - type: input
+    id: environment
+    attributes:
+      label: Preview version and actual environment
+      description: "OS/architecture, Python/dependencies, agent host and viewer/version where applicable."
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Exact scope and result
+      description: "State which checks passed, failed or were not performed. Use a synthetic document and its SHA256. For human review, state qualifications only with reviewer consent; never substitute model review."
+    validations:
+      required: true
+  - type: textarea
+    id: limits
+    attributes:
+      label: Remaining limitations
+      description: "Record source/locale/viewer restrictions, missing checks and any deviations."
+    validations:
+      required: true

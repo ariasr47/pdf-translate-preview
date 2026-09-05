@@ -1,0 +1,2 @@
+# Preserve reviewed source/license bytes and their manifest across Git checkouts.
+* -text

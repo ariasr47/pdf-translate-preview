@@ -1,0 +1,5 @@
+# Exact direct dependency versions used for the Windows Python 3.14 reference run.
+# Constraints complement requirements.txt; they do not assert cross-host validation.
+PyMuPDF==1.28.2
+pikepdf==10.13.0.post1
+fonttools==4.64.0

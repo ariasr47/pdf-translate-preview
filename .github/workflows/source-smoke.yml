@@ -1,0 +1,52 @@
+name: Source installation smoke
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        python: ['3.10', '3.14']
+    env:
+      PYTHONUTF8: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Verify distributed source files
+        run: python tools/verify_preview.py
+      - name: Install declared reference dependencies
+        run: python -m pip install -r pdf-translate/requirements.txt -c pdf-translate/constraints-reference.txt
+      - name: Import dependencies and run synthetic init smoke
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          import subprocess
+          import sys
+          import tempfile
+          import pymupdf, pikepdf, fontTools
+          print(sys.version)
+          print(pymupdf.__version__, pikepdf.__version__, fontTools.__version__)
+          root = Path.cwd()
+          with tempfile.TemporaryDirectory(prefix='pdf-preview-smoke-') as directory:
+              work = Path(directory)
+              sample = work/'sample.pdf'
+              subprocess.run([sys.executable, str(root/'examples/make_example.py'),
+                              '--output', str(sample)], check=True, cwd=work)
+              subprocess.run([sys.executable, str(root/'pdf-translate/scripts/pipeline.py'),
+                              'init', str(sample), '--work', str(work/'job')], check=True, cwd=work)
+              segments = json.loads((work/'job/segments.json').read_text(encoding='utf-8'))
+              assert segments['segments'], 'expected extractable synthetic source text'
+          print('Install/import/source/init smoke completed; translation and viewer checks were not performed.')

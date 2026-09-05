@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Delivery manifest 1.0; runtime validator also checks hashes and relationships",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "status",
+    "output",
+    "translations",
+    "segments",
+    "allow",
+    "fill_text",
+    "artifacts",
+    "verification",
+    "build",
+    "review",
+    "locale",
+    "security",
+    "environment"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "status": {
+      "enum": [
+        "review_required",
+        "review_failed",
+        "reviewed"
+      ]
+    },
+    "output": {
+      "type": "string",
+      "minLength": 1
+    },
+    "translations": {
+      "type": "string",
+      "minLength": 1
+    },
+    "segments": {
+      "type": "string",
+      "minLength": 1
+    },
+    "allow": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "fill_text": {
+      "type": "string"
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifacts": {
+      "type": "object",
+      "required": [
+        "output",
+        "translations",
+        "segments",
+        "comparison",
+        "scale_report",
+        "source",
+        "field_font"
+      ],
+      "properties": {
+        "output": {
+          "type": "object",
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "translations": {
+          "type": "object",
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "segments": {
+          "type": "object",
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "comparison": {
+          "type": "object",
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "scale_report": {
+          "type": "object",
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "exit_code",
+        "output_sha256",
+        "settings",
+        "log",
+        "qa"
+      ],
+      "properties": {
+        "exit_code": {
+          "const": 0
+        },
+        "output_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "build": {
+      "type": "object"
+    },
+    "review": {
+      "$ref": "review.schema.json"
+    },
+    "security": {
+      "type": "object"
+    },
+    "environment": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.pdf
+*.ttf
+*.otf
+*.whl
+jobs/
+local-evidence/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,344 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Declared review of exact final PDF bytes",
+  "type": "object",
+  "properties": {
+    "visual": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_performed",
+            "passed",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "not_applicable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reviewer",
+              "scope",
+              "evidence",
+              "output_sha256"
+            ]
+          }
+        }
+      ]
+    },
+    "bilingual_human": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_performed",
+            "passed",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "not_applicable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reviewer",
+              "scope",
+              "evidence",
+              "output_sha256"
+            ]
+          }
+        }
+      ]
+    },
+    "monolingual_human": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_performed",
+            "passed",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "not_applicable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reviewer",
+              "scope",
+              "evidence",
+              "output_sha256"
+            ]
+          }
+        }
+      ]
+    },
+    "model_bilingual": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_performed",
+            "passed",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "not_applicable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reviewer",
+              "scope",
+              "evidence",
+              "output_sha256"
+            ]
+          }
+        }
+      ]
+    },
+    "viewer": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_performed",
+            "passed",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "not_applicable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reviewer",
+              "scope",
+              "evidence",
+              "output_sha256"
+            ]
+          }
+        }
+      ]
+    },
+    "accessibility": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_performed",
+            "passed",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "not_applicable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reviewer",
+              "scope",
+              "evidence",
+              "output_sha256"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

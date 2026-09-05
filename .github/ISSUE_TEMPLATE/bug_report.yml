@@ -1,0 +1,35 @@
+name: Synthetic reproduction
+description: Report a pipeline problem without confidential attachments.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Use synthetic data only. Do not attach real PDFs, private screenshots, fonts, credentials, raw traces or identifying file paths. For vulnerabilities, follow SECURITY.md."
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Public-data check
+      options:
+        - label: "This report contains no confidential documents, personal data, credentials or raw host traces."
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: Preview version, OS and Python version
+      placeholder: "50.0.0; OS/version; Python/version"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal synthetic reproduction
+      description: "Paste a short source generator or describe exact steps using invented text. No attachments are needed."
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Expected result and actual failure
+      description: "Include target locale, dependency versions and the failing gate. Sanitize error messages and all paths."
+    validations:
+      required: true

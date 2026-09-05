@@ -1,0 +1,8 @@
+{
+  "visual": {"status": "not_performed"},
+  "bilingual_human": {"status": "not_performed"},
+  "monolingual_human": {"status": "not_performed"},
+  "model_bilingual": {"status": "not_performed"},
+  "viewer": {"status": "not_performed"},
+  "accessibility": {"status": "not_performed"}
+}
