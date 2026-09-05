@@ -1,39 +1,41 @@
-# 50.0.0 — experimental source preview
+# 51.0.0 — experimental source preview
 
-Prepared 2026-09-05; publication is not implied by this file.
+Prepared 2026-09-05. This source update does not imply a GitHub Release exists.
 
-This preview includes finalized-output verification and hash-bound delivery
-evidence, contextual occurrence mappings, inherited AcroForm structural checks,
-and explicit security and unsupported-input policies. Recent fixes address
-contextual target verification and field appearance handling. Each behavior
-remains subject to its documented gates and limitations.
+Translated pushbuttons now receive checked embedded-font appearances while
+preserving supported normal, pressed and rollover states, source font size,
+chrome, field identity and actions. Actual cached text, advances and unclipped
+ink replace the old approximate width gate. Unsupported whitespace, transforms,
+shaping, complex resources and expansion refuse explicitly. Independent review
+found and verified fixes for whitespace normalization, horizontal-scale size
+loss and repeated resource traversal.
 
-The public payload contains only the portable skill source, licenses and reviewed
-public documentation. It excludes private development history, corpus binaries,
-fonts, benchmark downloads, dependency wheels and internal execution evidence.
-MIT notices remain intact, with full AGPLv3 text and the combined-work scope
-specified in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Metadata verification accepts deliberate identity mappings while rejecting
+incorrect titles and deleted/reordered outline entries. Source-word checks
+retain accented words. URL punctuation differences require review without
+silently allowing changed query values or addresses.
 
-The final stress rerun remains **1/13 available documents completed**, from
-17 attempted sources and 415 available pages. It measures pseudo-localization
-and mechanical pipeline behavior, not translation accuracy. Two documents
-progressed to final verification after fixes but still failed other gates.
-Five cases stopped at retypeset and seven at final verification. See the
-[complete sanitized result table](docs/BENCHMARK.md).
+New diagnose and audit-form commands provide bounded failure guidance and a
+read-only form inventory. Documentation describes recovery, the proposed
+simple-form scope and separate accessibility/viewer/human qualifications.
+The public source now includes synthetic regressions, source fixture/font
+generators, dependency-update configuration, resolved-version artifacts and a
+reproducible runtime ZIP workflow. Maintainers still review dependency changes
+and refresh the source inventory before merging; no automatic merge is enabled.
 
-The local runtime suite passed 296 tests at the recorded qualification point.
-Fresh Windows version-50 Spanish and Arabic synthetic lifecycle checks passed.
-These findings do not imply success on the 12 failed public-document cases.
+Validation: 322 runtime, 15 grader and 17 tooling tests passed; the 10 distributed
+public regressions passed locally. Fresh Windows Spanish and Arabic lifecycles
+passed. The same-source 13-field canary passed final verification with no
+scaling. Its cached Print caption is translated and its originally inert action
+remains inert. Human review, actual viewer interaction and accessible structure
+remain unqualified. See the [support matrix](docs/SUPPORT.md).
 
-Qualified bilingual review, macOS and individual PDF viewer qualification remain
-pending. Initial agent-host PDF tasks timed out before final responses; the
-version-50 positive and injection repeats completed and independently passed
-artifact verification with zero QA issues. The earlier negative activation
-case completed without tool use. The initial timeouts remain part of the evidence;
-these bounded cases do not qualify the full evaluation matrix. See the
-[support matrix](docs/SUPPORT.md).
+The [controlled public-document run](docs/BENCHMARK.md) completed 3/13 available
+PDFs, versus 2/13 on the unchanged old engine with the corrected instrument and
+1/13 with the original instrument. Ten available PDFs still fail/refuse; four
+sources remain unavailable. No result is a human translation-quality score.
 
-Migration: use the full `pdf-translate/` directory. A clean job and final delivery
-manifest are required; do not reuse stale build evidence or overwrite prior
-deliveries. No private repository history or previous binary fixtures accompany
-this preview.
+Source only: no private Git history, PDF fixtures, fonts, wheels or raw agent
+traces are included. MIT and complete AGPL notices are retained unchanged.
+Install the complete pdf-translate directory and use a fresh job and new final
+artifact destinations; old sealed delivery evidence must never be edited.

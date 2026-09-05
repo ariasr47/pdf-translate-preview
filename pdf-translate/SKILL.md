@@ -12,7 +12,7 @@ compatibility: >-
   Local scripts are provider-neutral. Network access is optional for running
   the engine and useful for issuer terminology and licensed font research.
 metadata:
-  version: "50"
+  version: "51"
 ---
 
 # PDF translation with verifiable form preservation
@@ -91,6 +91,10 @@ Do not invent filing requirements or claim certification.
 - [Retypesetting details](references/retypeset.md): paragraphs, overrides,
   rotated text, script direction and explicit mirroring.
 - [Failure modes](references/failure-modes.md): diagnose a refused build.
+- [Recovery](references/recovery.md): turn a failed-stage log into a bounded
+  repair plan with `diagnose`; keep failed gates and unknown findings visible.
+- [Simple-form trials](references/simple-forms.md): use `audit-form` for a
+  read-only inventory, then perform viewer, human and accessibility review.
 - [Support boundaries](references/support.md): actual measured coverage,
   accessibility and viewer limitations.
 - `schemas/`: draft job brief and review/delivery shape contracts. Runtime

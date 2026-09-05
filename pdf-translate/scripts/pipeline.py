@@ -54,6 +54,12 @@ Usage:
   python3 pipeline.py review DELIVERY.json REVIEW.json
       attach declared review of exact final bytes; never edit the PDF
 
+  python3 pipeline.py diagnose STAGE.log [--output NEW_REPORT.json]
+      group explicit failures and suggest bounded repairs; does not change gates
+
+  python3 pipeline.py audit-form SOURCE.pdf [--output NEW_REPORT.json]
+      inventory form mechanics; does not establish accessibility conformance
+
   python3 pipeline.py bilingual ORIGINAL.pdf FINAL.pdf BOTH.pdf
       optional reading copy with source and target pages interleaved.
       Refuses a fillable input unless --reading-copy (duplicate field
@@ -438,6 +444,9 @@ def main(argv=None):
         print(__doc__)
         return 2
     cmd, rest = argv[0], argv[1:]
+    if cmd in ('diagnose', 'audit-form'):
+        from diagnostics import main as diagnostics_main
+        return diagnostics_main([cmd, *rest])
     if cmd == 'init':
         return cmd_init(rest)
     if cmd == 'from-cores':

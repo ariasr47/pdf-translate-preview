@@ -52,7 +52,8 @@ Intel Mac, Preview.app or macOS agent-host compatibility is claimed yet.
 
 `requirements.txt` declares dependency ranges. Optional
 `constraints-reference.txt` records the direct versions used locally; it is not
-a complete transitive lock. To use those direct versions, append
+a complete transitive or cross-platform lock. See the
+[resolved-version inventory protocol](DEPENDENCIES.md). To use those direct versions, append
 `-c pdf-translate/constraints-reference.txt` to the pip command. Retain the
 resolved dependency versions in private local evidence. Dependency installation
 accesses upstream package servers and their software has its own license terms.

@@ -1,49 +1,38 @@
-# Qualification matrix
+# Qualification matrix — version 51
 
-Status as prepared on 2026-09-05. This is an experimental source preview.
-The table distinguishes demonstrated local behavior from planned qualification.
+Prepared 2026-09-05. Experimental source preview; success remains document-specific.
 
-| Area | Evidence and boundary |
+| Area | Demonstrated evidence and limits |
 |---|---|
-| Intended starting scope | Simple born-digital pages with extractable visible text, modest text expansion and fonts with target glyph coverage; document-specific gates must pass |
-| AcroForm fields | Automated structure and fill round-trip checks; combo/list appearance support has explicit refusal boundaries; actual viewer editing must be tested separately |
-| Spanish (es-US) and Arabic | Controlled synthetic Windows engine examples completed after an Arabic target-length adjustment; this is not human linguistic qualification or support for every document in either language |
-| General public-document stress run | Final rerun: 17 source URLs, 13 available documents covering 415 pages, four unavailable; pseudo-localization at expansion factor 1.0 completed final verification for 1/13. See the [result table](BENCHMARK.md) |
-| Windows Python | Python 3.14 local runs and fresh-environment Spanish/Arabic lifecycle checks passed for version 50; this does not qualify other OS, document classes or all locales |
-| macOS | Pending; installation and review protocol supplied, no actual Mac run asserted |
-| Linux and other Python versions | No platform-wide qualification asserted by this preview |
-| Agent host | Three bounded Windows Claude CLI cases: a negative activation case completed with zero tools; version-50 positive and injection PDF repeats completed and independently passed artifact verification and QA. The injected instruction was observed and its requested sentinel was not created. This is not the complete evaluation matrix or a host-wide compatibility guarantee |
-| Qualified bilingual human review | Pending; model output and mechanical checks are not a human sign-off |
-| Acrobat, Preview, browser PDF viewers | Pending. Adobe failed during startup before a PDF opened; browser policy blocked the attempted local-PDF route. Neither attempt establishes PDF compatibility or failure |
-| Accessibility, PDF/UA, official/certified translation | Not established; preserve source and follow the applicable issuing body's requirements |
+| Starting scope | Proposed simple-form trials: 1–5 pages, at most 50 widgets, visible born-digital text; all further input and delivery gates apply |
+| AcroForm | Automated field/export/geometry and fill round-trip checks; supported cached choices and normal/pressed/rollover captions; no universal interactive-viewer guarantee |
+| Windows | Actual Python 3.14 fresh-environment Spanish and Arabic synthetic lifecycle checks passed for version 51 |
+| Automated tests | 322 development runtime tests, 15 canary-grader tests, 17 tooling tests; 10 public synthetic tests are distributed and pass locally |
+| CI | The preceding public version-50 commit passed six OS/Python installation/init jobs. The updated workflow adds public regressions and reproducible runtime archives; see the actual commit's Actions results before claiming it passed |
+| Agent host | Prior bounded Windows Claude CLI negative/positive/injection cases passed their recorded scopes; these do not qualify every task or agent host |
+| Human linguistic review | Not performed; a paired local canary packet and MQM-based public protocol are prepared |
+| Acrobat / Preview / browser | Not performed. Adobe failed at startup before opening the PDF, no macOS viewer is available here, and the attempted local browser PDF route was blocked by tool policy. These are not PDF compatibility results |
+| Accessibility | Automated inventory completed; canary lacks five alternate control labels, tags and declared tab order. Keyboard/screen-reader review and conformance remain unestablished |
 
-A final synthetic canary exercised two pages and 13 fields: verification passed,
-all four checked identifiers survived, no scaling was needed, and QA retained one
-deliberate issuer warning with zero errors. Model visual inspection passed both
-pages; this is explicitly separate from human, native-viewer and accessibility review.
+The same-source two-page canary retains 13 fields, all four checked identifiers
+and source text size. Exact-byte final verification passed, with zero QA errors
+and one deliberate school-name warning. Both source/final pages were visually
+inspected by the model. The final runtime independently reverified the sealed
+PDF without modifying it. Its human and viewer review categories remain pending.
 
-The final positive and injection host repeats used 25 and 28 tool calls
-respectively, and their exact final manifests validated. Earlier 240-second
-timeouts remain recorded failures; later successful repeats do not erase them.
-The injection result supports only the tested instruction-handling case, not a
-general security guarantee. No human review was performed by these model runs.
+The preceding public CI run is
+[available here](https://github.com/ariasr47/pdf-translate-preview/actions/runs/33983017600).
+Installation on macOS is not a Preview interaction test. CI archives are build
+artifacts, separate from a GitHub Release and from product qualification.
 
-The included CI workflow proposes Windows, macOS and Linux clean installation,
-imports, source verification and synthetic init smoke checks on Python 3.10/3.14.
-Configuration alone is not evidence of an executed check. A future passing job
-would qualify those limited checks, not full translation or native PDF viewers.
+The [controlled benchmark](BENCHMARK.md) now completes 3 of 13 available PDFs;
+ten still fail or refuse and four unavailable PDFs are not passes. One change
+comes from corrected benchmark authoring, one additional pass from engine
+metadata verification. The findings support controlled trials, not general
+production readiness or a linguistic quality score.
 
-The benchmark uses deterministic pseudo-localization, not professional translation.
-Its final failures are retained: five retypeset and seven final-verification
-stops. It does not support a claim of general production readiness.
-The proposed scope is a place to begin a controlled trial, not a success guarantee.
-
-Image-only scans, OCR overlays, unsupported scripts/fonts/layouts and failed
-gates require refusal or a separately planned workflow. No OCR masking or
-general reflow fallback is implemented. Do not shorten away meaning to fit a box,
-suppress findings, or equate an exit-zero result with a reviewed translation.
-
-Record each new qualification with source/output SHA256, preview version,
-environment, viewer versions, exact checks and limitations. The
+Record every new result with input/output hashes, exact runtime/environment,
+locale, font set, checks, reviewer/app versions and limitations. The
 [human](review/human.md), [macOS](review/macos.md) and [viewer](review/viewers.md)
-packets are unfilled protocols, not claims that anyone completed them.
+protocols are not signatures or completed reviews. Never weaken a gate, remove
+meaning or flatten a required form field to manufacture a successful delivery.

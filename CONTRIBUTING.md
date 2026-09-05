@@ -17,6 +17,11 @@ do not add third-party PDFs or font binaries. Preserve license notices and the
 combined-work licensing scope. Do not weaken verification thresholds to obtain
 a favorable benchmark score.
 
+Run `python -m unittest discover -s tests -p 'test_*.py' -v` before proposing a
+change. The public tests create their PDFs in temporary directories and must
+continue to distribute generator source only: do not commit generated PDFs,
+font files, resolved environments, or downloaded dependency artifacts.
+
 This public preview does not contain the private development corpus or history.
 Public contributions must be independently reproducible from permitted source
 and assets. [Review protocols](docs/review/human.md) distinguish automated,

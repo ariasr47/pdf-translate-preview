@@ -29,6 +29,22 @@ may supply `model_bilingual` evidence but cannot fill a human category.
 
 ## Record the actual outcome
 
+Use a project-specific [MQM Core](https://www.themqm.org/mqm-pillars/the-mqm-core-typology/)
+subset: accuracy, terminology, fluency, style, locale conventions and design.
+For this trial, classify limited-impact issues as minor, substantial obstacles
+to correct use as major, and errors that defeat the intended purpose as critical.
+Record neutral preferences separately. These severity decisions depend on the
+job brief; a spelling error is not automatically assigned one severity.
+Resolve every critical or major issue before acceptance. Do not infer a pass
+from a low average score that masks a serious instruction or numeric error.
+The [MQM scoring guidance](https://www.themqm.org/mqm-pillars/the-mqm-scoring-models/)
+allows project-specific scoring; this preview does not prescribe a universal
+numeric quality threshold. Blank issue counts mean unreviewed, not zero errors.
+
+Suggested issue record: stable occurrence/page/field; source and target span;
+MQM category; severity and user impact; proposed correction; resolution;
+reviewer; final output hash; and date. Assess every page for a small form.
+
 Use `record-template.json` as the starting state. Change only categories actually
 performed. A completed category requires `status`, `reviewer`, `scope`,
 `evidence` and `output_sha256` naming the exact final PDF. Status can be `passed`,

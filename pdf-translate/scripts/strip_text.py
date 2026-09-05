@@ -612,15 +612,12 @@ def strip_text(src, dst, hide_buttons=None, captions=None, widget_text=None,
                 report['dead_buttons'].append({'page': i, 'name': t})
             cap_key = t if t in captions else (base if base in captions else None)
             if cap_key is not None:
-                mk = a.get('/MK')
-                if mk is None:
-                    a.MK = pikepdf.Dictionary()
-                    mk = a.MK
-                mk.CA = pikepdf.String(str(captions[cap_key]))
-                # Stale appearance streams keep drawing the source-language
-                # caption on top of /CA; drop them so NeedAppearances rebuilds.
-                if '/AP' in a:
-                    del a.AP
+                from caption_appearances import stage_caption, CaptionAppearanceError
+                try:
+                    stage_caption(pdf, a, str(captions[cap_key]))
+                except CaptionAppearanceError as exc:
+                    pdf.close()
+                    raise CaptionAppearanceError(f'{t}: {exc}') from exc
                 report['rewritten_captions'].append(t)
             if base in hide or t in hide:
                 a.F = 2

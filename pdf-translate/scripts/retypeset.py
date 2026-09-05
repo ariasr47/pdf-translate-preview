@@ -1407,6 +1407,17 @@ def retypeset(stripped, segf, trf, out):
     if n:
         print(f'canonical text layer: rewrote /ToUnicode on {n} font object(s)')
 
+    from caption_appearances import repair_captions, CaptionAppearanceError
+    try:
+        count = repair_captions(out, {'regular': f_regular, 'bold': f_bold,
+                                     'italic': f_italic, 'bold_italic': f_bold_italic})
+        if count:
+            print(f'captions: cached and validated {count} appearances')
+    except CaptionAppearanceError as exc:
+        os.remove(out)
+        print(f'FAIL caption appearance: {exc}')
+        return 1
+
     from provenance import write_build
     write_build(out, stripped, segf, trf, {
         'regular': f_regular, 'bold': f_bold,

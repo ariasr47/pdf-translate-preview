@@ -1,42 +1,56 @@
-# Public-document stress result — 2026-09-05
+# Public-document stress measurement — version 51
 
-This sanitized summary records the final local rerun across 17 source entries.
-Thirteen documents were available, covering 415 pages. Four USCIS downloads
-returned HTTP 403 and remain missing, not passed. No PDFs, font files or private
-execution logs are distributed with this summary.
+On 2026-09-05, 13 available documents covered 415 pages. Four USCIS inputs
+remained unavailable (the preceding fetch returned HTTP 403); this run did not
+refetch them. No source PDF or font binaries are distributed here.
 
 The instrument uses deterministic pseudo-localization at expansion factor 1.0,
-full pages and actual local font-role files. It performs final verification
-after field-font finalization. It does not assess natural translation, and
-human/model translation review was not performed. No thresholds were relaxed
-or findings suppressed to obtain these results.
+full pages and four explicit local Arial role files. It tests mechanical
+behavior, not natural translation or human review. No gates were weakened.
 
-| Document identifier | Pages | Final observed result |
+| Instrument and runtime | Final verified / available |
+|---|---:|
+| Previous instrument, version 50 | 1 / 13 |
+| Corrected instrument, unchanged version 50 | 2 / 13 |
+| Same corrected instrument, version 51 | 3 / 13 |
+
+The corrected instrument preserves hyphenated form codes, source spacing and
+quoted operational spans across extracted lines. W-9 passes on the unchanged
+engine with that correction; it is not counted as an engine improvement. W-4
+additionally passes on version 51 after metadata identity verification is fixed.
+The control and final run used identical PDF and font hashes.
+
+Instrument SHA256: `b452947f5276f3f15fad5a10481bb84f721cb282d3dbb7dcbf8bccb5812d8def`.
+
+| Source identifier | Pages | Observed result |
 |---|---:|---|
-| IRS W-9 | 6 | Final verification failed |
-| IRS W-4 | 5 | Final verification failed |
-| IRS 1040-ES | 16 | Final verification failed |
-| IRS 1040 general instructions | 126 | Retypeset failed |
-| USCIS I-9 | — | Missing, HTTP 403 |
-| USCIS I-864 | — | Missing, HTTP 403 |
-| USCIS N-400 | — | Missing, HTTP 403 |
-| USCIS G-28 | — | Missing, HTTP 403 |
-| California FL-100 | 3 | Final verification failed |
-| California FL-300 | 4 | Final verification failed |
-| OPM SF-15 | 2 | Final verification failed |
-| State DS-11 | 6 | Retypeset failed |
-| FDA 3500 | 8 | Final verification failed |
-| EU GDPR | 88 | Retypeset failed |
-| BabelDOC paper | 10 | Retypeset failed |
-| Medicare handbook | 128 | Retypeset failed |
-| Raspberry Pi 4 datasheet | 13 | Final verification passed |
+| irs-w9.pdf | 6 | Final verification passed |
+| irs-w4.pdf | 5 | Final verification passed |
+| irs-1040es.pdf | 16 | Final verification failed |
+| irs-i1040gi.pdf | 126 | Retypeset refused |
+| uscis-i9.pdf | — | Unavailable; not refetched |
+| uscis-i864.pdf | — | Unavailable; not refetched |
+| uscis-n400.pdf | — | Unavailable; not refetched |
+| uscis-g28.pdf | — | Unavailable; not refetched |
+| cajc-fl100.pdf | 3 | Retypeset refused |
+| cajc-fl300.pdf | 4 | Retypeset refused |
+| opm-sf15.pdf | 2 | Final verification failed |
+| state-ds11.pdf | 6 | Retypeset refused |
+| fda-3500.pdf | 8 | Strip refused |
+| eu-gdpr.pdf | 88 | Retypeset refused |
+| arxiv-babeldoc.pdf | 10 | Retypeset refused |
+| medicare-handbook.pdf | 128 | Retypeset refused |
+| rpi4-datasheet.pdf | 13 | Final verification passed |
 
-**Result: 1 passed, 12 failed, 4 unavailable.** The denominator for available
-documents is 13; the passing case is not a human-reviewed translation.
-Source editions and availability can change, so these identifiers are not a
-universal claim about every edition of each document.
+**Result: 3 passed, 10 refused/failed, 4 unavailable.**
 
-Fixes allowed W-4 and FDA 3500 to reach final verification. Remaining failures
-include caption clipping, metadata and identifier mismatches, untranslated text,
-overflow and missing glyph coverage. Progress to a later stage is not completion.
-This evidence supports continued development and controlled trials only.
+Failure stages: seven retypeset, one strip, and two final-verification stops.
+Caption expansion and unsupported source style/transform cases now stop before
+an unchecked output is delivered. Other findings include missing glyphs,
+page-text overflow and retained source phrases needing contextual disposition.
+A gate failure is not automatically a proven translation defect: quoted
+operational wording can conflict with source-language leak checks and needs
+explicit review. No such findings were suppressed in this measurement.
+
+This small convenience corpus does not establish a population success rate,
+accessibility, native viewer compatibility or human-reviewed translation quality.

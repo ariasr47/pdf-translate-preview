@@ -1,36 +1,41 @@
 # Support and measured limits
 
-The engine is intended for born-digital PDFs with extractable visible text and
-supported fonts/layouts. It preserves page geometry and AcroForm structure with
-strict gates, but success is document-specific. It refuses image-only scans and
-OCR overlays; it does not implement OCR masking or a general reflow fallback.
-RTL/shaped scripts require licensed glyph coverage, logical text validation and
-visual review. Mirroring is opt-in. PDF/UA/tagged accessibility is not promised.
+Use this engine for visible born-digital text with supported fonts/layouts.
+Success is document-specific. Scans and OCR overlays refuse; no general OCR
+masking or reflow fallback is implemented. RTL page text requires suitable
+fonts, logical text validation and visual inspection. Caption shaping has a
+narrower supported route. PDF/UA and tagged accessibility are not promised.
+See [simple-form trials](simple-forms.md) for the proposed 1–5 page, at most
+50-widget starting scope and its separate qualification requirements.
 
-The 2026-09-05 public-document instrument attempted 17 URLs: 13 were available,
-covering 415 pages; four USCIS URLs returned HTTP 403. With the documented
-pseudo-localization map, expansion factor 1.0 and four actual Arial role files:
-6 stopped at retypesetting, 1 at stripping, 5 at final verification, and 1
-completed final verification. No findings were suppressed. This is a pipeline
-stress measurement, not evidence of linguistic translation quality or a
-17-document success claim. Availability and source bytes can change.
+The 2026-09-05 controlled version-51 stress measurement used 13 available PDFs
+(415 pages); four previously blocked USCIS sources remained unavailable. With
+deterministic E=1.0 pseudo-localization and four actual Arial font-role files,
+three documents reached final verification. Seven stopped during retypesetting,
+one during strip and two during final verification. No findings were suppressed.
+This is mechanics testing, not human-reviewed translation or a success-rate
+estimate for all PDFs. One newly passing case is attributable to corrected
+benchmark authoring: the unchanged version-50 runtime passed two cases with the
+same corrected instrument, source bytes and fonts. Version 51 additionally
+passed W-4 after metadata checks were corrected.
 
-Failures included missing glyphs, overflow and final field/placement findings.
-Use this evidence to prioritize layout coverage; do not promise universal
-pixel fidelity. Corpus extraction/strip verdicts are narrower tests than an
-end-to-end translated delivery. Full measurement logs live with the repository
-implementation evidence, outside the portable runtime.
-
-Windows/Python 3.14 was exercised locally during hardening. CI defines other
-OS/Python checks; their configuration is not evidence they have run. Proprietary
-viewer interaction, fresh external host installation and qualified human review
-must be recorded separately when performed. A copied-folder smoke test proves
-local runtime independence, not universal host compatibility.
-
+Actual Windows/Python 3.14 fresh-environment Spanish and Arabic synthetic
+lifecycles passed. The source-preview CI separately exercises installation and
+synthetic checks on its reported OS/Python matrix; those results do not qualify
+native viewers or all scripts/layouts. Model-agent traces, mechanical PDF
+checks, visual inspection and qualified human review are separate evidence.
+Unavailable reviews remain not_performed.
 
 Final choice appearance caching supports tested combo/list fields, inherited
-fields and quarter-turn rotation. Scrolling lists with nonzero `/TI`, ambiguous
-multi-valued combos or labels the renderer cannot faithfully cache are refused.
-This path uses the tested PyMuPDF native wrapper API and requires regression
-checks on dependency upgrades. Future viewer interaction remains a separate
-qualification from the cached initial appearance.
+fields and quarter-turn rotation. Scrolling lists with nonzero /TI, ambiguous
+multi-valued combos and unreproducible labels refuse. Caption reconstruction
+supports bounded simple vector normal/pressed/rollover streams at source font
+size. Missing source style, unsupported transforms/shaping/whitespace, icons,
+complex resource graphs or expansion refuse. Read [widget text](widget-text.md).
+Future interactive behavior still requires save/reopen in each claimed viewer.
+
+The two-page, 13-field canary retains all fields and checked identifiers with
+zero verification failures and no scaling. Its automated accessibility inventory
+still finds five controls without alternate labels, no usable tagged structure
+tree and unspecified tab order. No screen-reader, native-viewer or qualified
+human review was completed. Mechanical preservation is not accessibility.

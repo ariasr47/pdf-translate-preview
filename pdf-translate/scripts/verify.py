@@ -58,10 +58,10 @@
                   NBSP-normalized strip is empty FAILs and names the core.
                   Omit the flag: this gate does not run. Length-1 non-empty
                   placement skip is unchanged. JSON null is retypeset's job.
-10. caption width with --translations: output pushbutton /MK /CA wider
-                  than the widget rect (helv text_length, pad 2 pt each
-                  side) FAILs listing field name and caption. Omit the
-                  flag: this gate does not run. Measures output /CA only.
+10. caption AP    with --translations: each cached pushbutton appearance must
+                  match /MK /CA, with measured advances and unclipped glyph
+                  ink contained by the widget. Missing/stale/clipped APs fail.
+                  Omit the flag: this gate does not run.
 11. invisible text a page of the ORIGINAL whose text is not what the reader
                   sees (stripping it changes under 3% of the text-span
                   area in pixels: an OCR layer over a scan, or text under
@@ -235,7 +235,7 @@ def script_class(script):
 def source_words_from_text(text, allow, script='Latin'):
     """Unique source words of the given script from text (lowercased)."""
     if script == 'Latin':
-        words = {w.lower() for w in re.findall(r"[A-Za-z][A-Za-z'\-]{3,}", text or '')}
+        words = {w.lower() for w in unicode_words(text or '') if len(w) >= 4}
     else:
         minlen = MIN_WORD_LETTERS.get(script, 2)
         words = {w.lower() for w in re.findall(script_class(script) + '{%d,}' % minlen, text or '')}
@@ -407,14 +407,24 @@ def document_metadata_misses(odoc, jdoc, conf):
 
     otitle = ((odoc.metadata or {}).get('title') or '').strip()
     jtitle = ((jdoc.metadata or {}).get('title') or '').strip()
-    if otitle and T.get(otitle) and jtitle == otitle:
-        misses.append(('title', f'/Title is still the source string: '
-                                f'{otitle[:60]}'))
+    expected_title = str(T.get(otitle) or otitle).strip()
+    if jtitle != expected_title:
+        misses.append(('title', f'/Title differs from authored target: '
+                                f'expected {expected_title[:60]!r}, got {jtitle[:60]!r}'))
 
-    for entry in jdoc.get_toc(simple=True) or []:
-        title = str(entry[1]) if len(entry) > 1 else ''
-        if title and T.get(title):
-            misses.append(('outline', f'bookmark still reads: {title[:60]}'))
+    original_toc = odoc.get_toc(simple=True) or []
+    output_toc = jdoc.get_toc(simple=True) or []
+    if len(original_toc) != len(output_toc):
+        misses.append(('outline', f'bookmark count changed: '
+                        f'{len(original_toc)} -> {len(output_toc)}'))
+    for index, (source, target) in enumerate(zip(original_toc, output_toc), 1):
+        title = str(source[1])
+        expected = str(T.get(title) or title)
+        if str(target[1]) != expected:
+            misses.append(('outline', f'bookmark {index} differs from authored target: '
+                            f'expected {expected[:60]!r}, got {str(target[1])[:60]!r}'))
+        if source[0] != target[0] or source[2] != target[2]:
+            misses.append(('outline', f'bookmark {index} hierarchy or destination page changed'))
 
     try:
         cat = jdoc.pdf_catalog()
@@ -646,17 +656,23 @@ def caption_fontsize(widget):
 
 
 def overflowing_button_captions(doc):
-    """Output pushbuttons whose /CA does not fit the widget rect."""
+    """Output pushbuttons with missing, stale or clipped cached caption ink."""
+    import io
+    import pikepdf
+    from acroform import Field
+    from caption_appearances import appearance_issue
     hits = []
-    for page in doc:
-        for w in page.widgets() or []:
-            if not (w.field_flags & PUSHBUTTON):
-                continue
-            cap = (w.button_caption or '').strip()
-            if not cap:
-                continue
-            if caption_overflows(cap, w.rect.width, caption_fontsize(w)):
-                hits.append((w.field_name, cap))
+    with pikepdf.open(io.BytesIO(doc.tobytes())) as pdf:
+        for page in pdf.pages:
+            for obj in page.get('/Annots', []):
+                field = Field(obj)
+                if field.get('/FT') != pikepdf.Name('/Btn') or not int(field.get('/Ff', 0)) & PUSHBUTTON:
+                    continue
+                if int(obj.get('/F', 0)) & 3:
+                    continue
+                issue = appearance_issue(obj)
+                if issue:
+                    hits.append((field.name, str(obj.get('/MK', {}).get('/CA', '')) + ' [' + issue + ']'))
     return hits
 
 
@@ -1266,12 +1282,12 @@ def verify(orig, trans, fill_text='Test value 123', allow=None, min_ink=0.4,
 
         clipped = overflowing_button_captions(jc)
         if clipped:
-            print(f'FAIL caption wider than widget ({len(clipped)}):')
+            print(f'FAIL caption appearance ({len(clipped)}):')
             for name, cap in clipped[:20]:
                 print(f'   {cap} ({name})')
             fail = 1
         else:
-            print('PASS caption width')
+            print('PASS caption appearance')
 
         segs = (segfile.get('segments')
                 if isinstance(segfile, dict) else segfile)

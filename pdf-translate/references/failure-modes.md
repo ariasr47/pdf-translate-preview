@@ -56,13 +56,14 @@ hand-place any leaders, follow the same rule.
 
 Pushbuttons carry captions in `/MK /CA` rendered by their appearance stream
 ABOVE page content. Translating the page text underneath just double-draws:
-English caption on top, your translation peeking out. Either hide the button
-and draw a translated replacement, or skip translating that page text (add
-it to `skip` in translations.json) and leave the button as UI chrome.
-A rewritten `/CA` can still **clip**: gate 02 only checks leftover English;
-`--translations` also measures Helvetica caption width against the widget
-rect (2 pt pad each side) and FAILs if the string does not fit. Short
-chrome, not a sentence in a 17-pt-tall button.
+English caption on top, your translation peeking out. Use `--captions` to
+stage a supported source appearance and rebuild its caption with the target
+font. Keep field identity and actions; do not add a duplicate widget.
+A rewritten `/CA` can still **clip**. Verification now checks actual cached
+appearance text and ink rather than estimating a Helvetica width. Missing
+source styles, unsupported states and expansion at source size fail explicitly.
+Use accurate concise wording where it fits; do not flatten or hide a working
+field to make verification pass. See [recovery](recovery.md).
 
 ## 7. Dropped text color turns white headings black
 

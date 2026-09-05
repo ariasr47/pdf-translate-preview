@@ -84,7 +84,12 @@ def _cache_choice_appearances(pdf, tmp):
             if combo and len(displays) > 1:
                 raise ChoiceAppearanceError(f'{field.name}: combo has multiple selected values')
             choices.append((pno, ano, field.name, combo, labels, displays))
-    if not choices:
+    cached_captions = any(
+        Field(obj).get('/FT') == pikepdf.Name('/Btn')
+        and int(Field(obj).get('/Ff', 0)) & (1 << 16)
+        and isinstance(obj.get('/AP', {}).get('/N'), pikepdf.Stream)
+        for page in pdf.pages for obj in page.get('/Annots', []))
+    if not choices and not cached_captions:
         return
     missing_text = []
     for pno, page in enumerate(pdf.pages):

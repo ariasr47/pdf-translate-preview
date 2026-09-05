@@ -12,12 +12,22 @@ hover, in every dropdown and on every button.
 
 ## Pushbutton captions
 
-Prefer `--captions captions.json` (field-name → caption) at strip time to
-rewrite `/MK /CA` in place and drop stale `/AP` streams, so the widget
-count stays exact and viewers do not keep drawing the source-language
-caption. The new caption must fit the widget: verify `--translations`
-fails a caption wider than the button minus a 2 pt pad each side, so
-prefer short chrome (`Print` / `OK`) over a sentence in a tiny button.
+Use `--captions captions.json` (field-name → caption) at strip time. It stages
+the existing source appearances before changing `/MK /CA`. Retypesetting
+embeds the target font and installs checked appearances before the build
+receipt is written. Simple normal, pressed and rollover streams are handled
+independently, preserving their nontext chrome and the original field/action.
+Unsupported icons, alternate captions, transforms, source styles or missing
+appearances are refusals. The renderer never guesses a missing source style.
+The current bounded caption route accepts single ASCII word spaces and LF
+line breaks; nonbreaking spaces, tabs, repeated/edge spaces and blank lines
+are explicit refusals rather than silently normalized. Shaped-script captions
+and nondefault horizontal text scaling are also outside this route.
+
+The caption must fit at source font size. Supported wrapping uses actual font
+metrics. Verification checks cached Unicode text, advances, unclipped ink and
+clipping; it no longer estimates width using Helvetica or a fixed padding.
+Prefer accurate concise captions over lengthy instructions in a tiny button.
 Hide (`--hide-buttons`) only when the button should disappear; hiding plus
 a drawn replacement adds widgets unless you are replacing, not
 duplicating. Never hide a button and draw a second widget. A caption you

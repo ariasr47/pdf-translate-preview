@@ -149,14 +149,30 @@ def _finding(kind, severity, core, detail):
     return {'kind': kind, 'severity': severity, 'core': core, 'detail': detail}
 
 
+def _url_prose_boundary(token):
+    """Normalize ambiguous prose punctuation only outside query/fragment values.
+
+    Equal normalized values still receive a review warning when raw tokens differ.
+    This does not silently declare a terminal path punctuation change harmless.
+    """
+    if not token.startswith(('http://', 'https://', 'www.')) or '?' in token or '#' in token:
+        return token
+    return token.rstrip('.,;!')
+
+
 def check_pair(core, target, identifiers, target_script, normalized=False):
     """Findings for one source/target pair."""
     out = []
     tgt = target if normalized else plain_text(target)
 
     protected = re.compile(r'https?://[^\s<>]+|www\.[^\s<>]+|[\w.+-]+@[\w.-]+|\b(?=[\w-]*[A-Za-z])(?=[\w-]*[0-9])[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+\b')
-    if sorted(protected.findall(core)) != sorted(protected.findall(tgt)):
-        out.append(_finding('protected-data', 'error', core, 'URL, email or operational identifier changed'))
+    source_tokens, target_tokens = sorted(protected.findall(core)), sorted(protected.findall(tgt))
+    if source_tokens != target_tokens:
+        if sorted(map(_url_prose_boundary, source_tokens)) == sorted(map(_url_prose_boundary, target_tokens)):
+            out.append(_finding('url-punctuation', 'warn', core,
+                'URL terminal punctuation changed; confirm it is sentence punctuation, not part of the address'))
+        else:
+            out.append(_finding('protected-data', 'error', core, 'URL, email or operational identifier changed'))
 
     src_dates, tgt_dates = date_parts(core), date_parts(tgt)
     src_dparts = sorted(p for p, _ in src_dates)

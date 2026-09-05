@@ -1,7 +1,7 @@
 # The verify gates — what each reads, what fails, and why
 
 Contents: the always-on gates · the leak scan · what `--translations`
-adds (placement, canonical text layer, chrome and caption width,
+adds (placement, canonical text layer, chrome and caption appearances,
 identifiers, override markers) · `/Opt` export parity · document metadata
 · shaped scripts · flags.
 
@@ -76,15 +76,17 @@ U+FB01 from the cmap, which is why cmap cannot find them — and maps each
 ligature glyph to its component code points, so the layer says "oficina".
 Nothing is done to the font file itself.
 
-**Pushbutton chrome and caption width.** Captions live in `/MK /CA` and
+**Pushbutton chrome and appearances.** Captions live in `/MK /CA` and
 draw on top of the page; `get_text()` still sees them. Either rewrite them
 in place with `--captions` at strip time (field count stays exact), or put
 the caption in `skip` and leave the button as UI chrome. If the original
 caption is still in the output and you did neither, verify fails and lists
 it. Do not hide a button and draw a second widget. Captions must **fit the
-widget rect**: the gate FAILs if Helvetica `text_length` of the output
-`/CA` is wider than the button minus a 2 pt pad each side. Prefer short
-chrome (`Print` / `OK`) over a sentence in a tiny button.
+widget rect**. The gate verifies cached caption text, actual font advances,
+unclipped ink and clipping in each supported appearance state. Rebuilding
+preserves source size and simple chrome with embedded target glyphs; missing
+or unsupported source appearances and genuine expansion are refusals. See
+[widget text](widget-text.md) for the supported caption route.
 
 **Write/find/say identifiers.** Quoted strings and `Form` / `Schedule` /
 `Attachment` / `Exhibit` names from the original page must still appear in

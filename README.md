@@ -25,12 +25,19 @@ from source. No PDFs or fonts are distributed here. Use the generated form for
 a first experiment and retain `delivery.json`, which records exact output hashes
 and distinguishes automated checks from reviews actually performed.
 
+Use [failure recovery](pdf-translate/references/recovery.md) and the
+[experimental simple-form trial checklist](pdf-translate/references/simple-forms.md).
+Public tests include source generators and an invented test font; no binary
+fixtures are shipped. Dependency PRs and CI runtime archives support maintenance.
+
 Read the [support matrix](docs/SUPPORT.md), [release notes](RELEASE_NOTES.md),
 [security guidance](SECURITY.md) and [review packets](docs/review/human.md).
 Qualified bilingual review and macOS/viewer qualification remain pending unless
 a later dated record explicitly establishes them. The public-document stress
 baseline completed 1 of 13 available documents; it is not a translation-quality
-score. The [final rerun](docs/BENCHMARK.md) retained that 1/13 result.
+score. The [controlled version-51 rerun](docs/BENCHMARK.md) completed 3/13;
+one additional pass is attributable to the engine and one to corrected benchmark
+authoring. Ten available documents still fail or refuse.
 
 ## Source and licensing
 

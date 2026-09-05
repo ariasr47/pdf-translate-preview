@@ -24,10 +24,8 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: ${{ matrix.python }}
-      - name: Verify distributed source files
-        run: python tools/verify_preview.py
       - name: Install declared reference dependencies
-        run: python -m pip install -r pdf-translate/requirements.txt -c pdf-translate/constraints-reference.txt
+        run: python -m pip install -r pdf-translate/requirements.txt
       - name: Import dependencies and run synthetic init smoke
         shell: python
         run: |
@@ -50,3 +48,34 @@ jobs:
               segments = json.loads((work/'job/segments.json').read_text(encoding='utf-8'))
               assert segments['segments'], 'expected extractable synthetic source text'
           print('Install/import/source/init smoke completed; translation and viewer checks were not performed.')
+      - name: Run public synthetic regressions
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Verify reviewed source inventory
+        run: python tools/verify_preview.py
+      - name: Record resolved inventory
+        run: python -m pip freeze --all > resolved-versions-${{ matrix.os }}-py${{ matrix.python }}.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: resolved-versions-${{ matrix.os }}-py${{ matrix.python }}
+          path: resolved-versions-*.txt
+          if-no-files-found: error
+
+  runtime-archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.14'
+      - run: python -m pip install -r pdf-translate/requirements.txt
+      - name: Build and verify downloadable runtime archive
+        run: |
+          python tools/build_release.py --output pdf-translate-runtime.zip --smoke
+          python tools/build_release.py --output pdf-translate-runtime-check.zip --smoke
+          cmp pdf-translate-runtime.zip pdf-translate-runtime-check.zip
+          sha256sum pdf-translate-runtime.zip
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pdf-translate-runtime
+          path: pdf-translate-runtime.zip
+          if-no-files-found: error
