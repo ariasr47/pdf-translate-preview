@@ -73,3 +73,17 @@ hash separately from runtime changes.
 
 The existing 3/13 result and archived outputs remain unchanged. This
 investigation is not a new translation qualification.
+
+## Version 54 frozen subset replay
+
+On 2026-09-06, the unchanged frozen seven-document subset again produced three
+mechanically finalized outputs. The separate 24-case actual-translation
+synthetic set produced 14 finals, 6 rebuild refusals and 4 early rotation
+refusals. All 28 pages from passing finals were pixel-identical to the frozen
+originals. The WHO case retained 766 vector paths and matching paint settings.
+
+This replay used unchanged sources and thresholds. It is regression evidence
+for this subset and does not change the historical 3/13 measurement, establish
+a population success rate, or add human, native-viewer or accessibility review.
+Document-global fragment protection remains an authoring limitation; future
+work should preserve source content by exact occurrence where appropriate.

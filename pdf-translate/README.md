@@ -1,4 +1,4 @@
-# Experimental PDF translation skill — 53.0.0
+# Experimental PDF translation skill — 54.0.0
 
 This folder is a self-contained Agent Skill for translating supported
 born-digital PDFs with strict layout and AcroForm checks. Read [SKILL.md](SKILL.md)
@@ -21,7 +21,7 @@ development repository outside this portable folder and are not needed to run an
 
 ## Distribution
 
-Experimental source-only preview. The MIT license covers this project's original
+Experimental source-only preview for supervised, document-specific use. The MIT license covers this project's original
 code and documentation. The PyMuPDF integration uses the GNU AGPLv3 distribution
 route described in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), unless you
 obtain a suitable commercial license from Artifex. No commercial license is

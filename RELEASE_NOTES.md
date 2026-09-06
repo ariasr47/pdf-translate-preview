@@ -1,3 +1,40 @@
+# 54.0.0 — conservative preservation and input refusals
+
+Version 54 corrects graphics-state preservation for demonstrated cases during
+text removal and refuses text clipping that cannot be safely stripped. The frozen synthetic 12×12 black
+square retained 144 dark pixels through stripped, output and final stages; the
+WHO source retained all 766 vector paths and paint settings. The earlier silent
+synthetic graphics defect did not occur on WHO.
+
+Sources that require a password refuse. The CLI does not accept, bypass or
+recover passwords; ask the user for an authorized accessible copy and process
+that copy as a new input. Pages with inherited or direct nonzero `/Rotate`
+values refuse at initialization. Capability inventory work and depth are bounded, including an
+explicit CLI work budget; all seven frozen negative cases produced clean
+expected refusals.
+
+The exact qualified floor is PyMuPDF 1.27.1, pikepdf 10.5.0 and fonttools
+4.40.0. This explicitly supersedes the version-53 note below that named
+PyMuPDF 1.24.10. Tested PyMuPDF 1.25.0, 1.25.5, 1.26.0 and 1.26.7 fail the
+strengthened ActualText semantics; intermediate releases are not claimed.
+
+Validation: 363 development tests and 38 exported public tests passed. The
+unchanged frozen replay mechanically finalized 3/7 available public documents
+and 14/24 actual-translation synthetic cases; 6 synthetic cases refused during
+rebuild and 4 rotated cases refused during initialization. Render comparison of
+all 28 passing final pages was pixel-identical to the frozen originals.
+
+Fonts for mixed-script output must cover retained source tokens and the target
+script. A retained identifier such as `ZX-2048` needs Latin letters, digits and
+punctuation even in Arabic or Devanagari output. Meaningful source control
+characters, including soft hyphens, and occurrence-specific benchmark
+preservation remain open measured limitations.
+
+This is still an experimental, supervised, document-specific source preview.
+No qualified human linguistic, native-viewer or accessibility review was added.
+Public CI for the source commit remains pending until publication. No formal
+GitHub Release is claimed.
+
 # 53.0.0 — dependency qualification and earlier diagnostics
 
 Corrected unsupported dependency floors to the measured working baseline:

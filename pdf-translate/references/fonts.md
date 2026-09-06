@@ -11,6 +11,13 @@ is usually OTF/OTC — do not use it directly; get a glyf source below.
 `prepare_font.py`'s rasterization assert is the enforcement; if it fails,
 your font source is wrong, not the pipeline.
 
+Choose every drawing font for the complete effective text, including retained
+source tokens as well as translated text. A target-script font can still fail a
+mixed-script job: for example, an Arabic or Devanagari translation that retains
+the identifier `ZX-2048` also needs Latin letters, digits and punctuation.
+Run `audit-fonts`, then rebuild with the exact configured role fonts; do not
+assume script coverage implies coverage for retained codes.
+
 ## CJK (Japanese, Chinese Simplified/Traditional, Korean)
 
 Google Fonts ships glyf-flavored VARIABLE TTFs — the reliable source:

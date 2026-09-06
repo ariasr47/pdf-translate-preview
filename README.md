@@ -39,6 +39,12 @@ score. The [controlled version-51 rerun](docs/BENCHMARK.md) completed 3/13;
 one additional pass is attributable to the engine and one to corrected benchmark
 authoring. Ten available documents still fail or refuse.
 
+Version 54 adds demonstrated graphics-state preservation, bounded input inspection,
+and early refusals for text clipping, password-requiring sources and
+rotated pages. Its frozen subset replay remained 3/7 public and 14/24 synthetic
+mechanical finals. These results do not establish general production readiness,
+translation quality, human review, native-viewer behavior or accessibility.
+
 ## Source and licensing
 
 This preview contains source, instructions and documentation. Dependencies are

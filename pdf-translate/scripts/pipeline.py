@@ -77,7 +77,7 @@ from field_fonts import field_fonts
 from compare import compare
 from render_pages import render_pages
 from retypeset import retypeset
-from strip_text import strip_text, WidgetTextError
+from strip_text import strip_text, StripGraphicsError, WidgetTextError
 from bilingual import main as bilingual_main
 from qa_check import main as qa_main
 from verify import verify, main as verify_main
@@ -112,7 +112,7 @@ def cmd_init(argv):
               f'{len(capabilities["attachments"])} attachment(s), '
               f'{len(capabilities["signatures"])} signature(s); policy={policy}')
         enforce(capabilities, policy)
-    except (OSError, ValueError, pikepdf.PdfError) as exc:
+    except (OSError, ValueError, pikepdf.PasswordError, pikepdf.PdfError) as exc:
         print(f'FAIL input policy: {exc}')
         return 2
     captions = None
@@ -131,6 +131,9 @@ def cmd_init(argv):
                             keep_encryption='--keep-encryption' in argv)
     except WidgetTextError as exc:
         print(f'FAIL widget text: {exc}')
+        return 2
+    except StripGraphicsError as exc:
+        print(f'FAIL graphics preservation: {exc}')
         return 2
     print(f'strip: xfa_removed={report.get("xfa_removed")} '
           f'dead_buttons={len(report.get("dead_buttons") or [])}')

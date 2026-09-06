@@ -100,7 +100,7 @@ _SCRIPTS = os.path.dirname(os.path.abspath(__file__))
 if _SCRIPTS not in sys.path:
     sys.path.insert(0, _SCRIPTS)
 from strip_text import (  # noqa: E402
-    invisible_text_pages, page_textdict_without_annots,
+    StripGraphicsError, invisible_text_pages, page_textdict_without_annots,
     page_rawdict_without_annots, widget_text_scaffold)
 
 MARKER = re.compile(
@@ -791,7 +791,11 @@ def main(argv=None):
     pages = argv[argv.index('--pages') + 1] if '--pages' in argv else None
     max_per_kind = (int(argv[argv.index('--max-per-kind') + 1])
                     if '--max-per-kind' in argv else DEFAULT_MAX_PER_KIND)
-    result = extract_segments(src, outdir=outdir, gap=gap, pages=pages)
+    try:
+        result = extract_segments(src, outdir=outdir, gap=gap, pages=pages)
+    except StripGraphicsError as exc:
+        print(f'FAIL graphics preservation: {exc}')
+        return 2
     nseg = len(result['segments'])
     nuniq = len(result['cores'])
     nw = len(result['warnings'])

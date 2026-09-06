@@ -26,7 +26,7 @@ jobs:
         run: |
           python -c "import sys, pymupdf, pikepdf, fontTools; print(sys.version); print(pymupdf.__version__, pikepdf.__version__, fontTools.__version__)"
           python tools/build_release.py --output pdf-translate-minimum.zip --smoke
-      - name: Run public synthetic regressions
+      - name: Run public lifecycle and synthetic regressions
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Record resolved minimum inventory
         run: python -m pip freeze --all > resolved-versions-minimum-ubuntu-py3.10.txt

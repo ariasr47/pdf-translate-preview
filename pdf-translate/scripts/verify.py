@@ -128,7 +128,7 @@ if _SCRIPTS not in sys.path:
     sys.path.insert(0, _SCRIPTS)
 from acroform import structural_misses
 from extract_segments import write_find_say_hits  # noqa: E402
-from strip_text import choice_exports, invisible_text_pages  # noqa: E402
+from strip_text import StripGraphicsError, choice_exports, invisible_text_pages  # noqa: E402
 
 # Unicode letter ranges per script (goal 15). A range table, not an ICU
 # dependency: the scan only needs to tell the source script from the target
@@ -1132,14 +1132,19 @@ def verify(orig, trans, fill_text='Test value 123', allow=None, min_ink=0.4,
         print(f'{"PASS" if ok else "FAIL"} page {i+1} ink ratio: {ratio:.2f}')
         fail |= (0 if ok else 1)
 
-    invisible = invisible_text_pages(orig)
-    for pno, fraction in invisible:
-        print(f'FAIL page {pno+1} invisible text layer: stripping the text changes '
-              f'{fraction:.1%} of its span area. This looks like an OCR\'d scan; the '
-              f'words the reader sees are pixels. Do not ship.')
+    try:
+        invisible = invisible_text_pages(orig)
+    except StripGraphicsError as exc:
+        print(f'FAIL graphics preservation: {exc}')
         fail = 1
-    if not invisible:
-        print('PASS text layer is visible')
+    else:
+        for pno, fraction in invisible:
+            print(f'FAIL page {pno+1} invisible text layer: stripping the text changes '
+                  f'{fraction:.1%} of its span area. This looks like an OCR\'d scan; the '
+                  f'words the reader sees are pixels. Do not ship.')
+            fail = 1
+        if not invisible:
+            print('PASS text layer is visible')
 
     # Canonical text layer (audit H4/H5). Authored strings count as
     # deliberate; so does anything already in the original, whose own

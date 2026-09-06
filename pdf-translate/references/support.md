@@ -26,6 +26,40 @@ native viewers or all scripts/layouts. Model-agent traces, mechanical PDF
 checks, visual inspection and qualified human review are separate evidence.
 Unavailable reviews remain not_performed.
 
+The 2026-09-06 version-54 replay used a smaller frozen subset without changing
+its sources or thresholds. It mechanically finalized 3 of 7 available public
+documents and 14 of 24 actual-translation synthetic cases. Six synthetic cases
+refused during rebuild and four rotated cases refused during initialization.
+All 28 passing final pages were pixel-identical to their frozen originals. This
+replay is regression evidence, not a replacement for the older 13-document
+measurement or a human translation-quality, native-viewer or accessibility
+qualification.
+
+The exact Python 3.10 dependency-floor job uses PyMuPDF 1.27.1, pikepdf 10.5.0
+and fonttools 4.40.0 and runs a generated-font init/rebuild/finish lifecycle.
+Earlier tested PyMuPDF releases either lack or do not honor the ActualText
+extraction behavior needed by the Arabic shaping check. Password-protected inputs and pages with
+nonzero inherited or direct `/Rotate` values are refused before text stripping.
+Version 54 locally qualified this exact minimum set and the Windows Python 3.14
+reference set (PyMuPDF 1.28.2, pikepdf 10.13.0.post1 and fonttools 4.64.0).
+Public CI for the published source commit remains pending.
+Text used as a clipping path is also refused because removing it would change
+page graphics. A source that requires a password refuses; the CLI does not
+accept, bypass or recover passwords. Ask the user for an authorized accessible
+copy and process that copy as a new input.
+
+The graphics-state fix retained the frozen synthetic 12×12 black square
+(144 dark pixels at source, stripped, output and final stages) and the WHO
+document's 766 vector paths and paint settings. The earlier silent synthetic
+graphics defect did not occur on WHO and should not be attributed to it.
+
+Mixed-script fonts must cover retained source tokens as well as the target
+script; `ZX-2048`, for example, requires Latin letters, digits and punctuation.
+Known open areas include deciding which meaningful source control characters
+(including soft hyphens) to preserve and binding benchmark preservation to
+specific occurrences instead of document-global fragments. These are measured
+limitations; do not weaken font, ink or source-leak gates to work around them.
+
 Final choice appearance caching supports tested combo/list fields, inherited
 fields and quarter-turn rotation. Scrolling lists with nonzero /TI, ambiguous
 multi-valued combos and unreproducible labels refuse. Caption reconstruction

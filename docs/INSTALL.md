@@ -60,8 +60,10 @@ accesses upstream package servers and their software has its own license terms.
 
 For a reproducible check of the declared direct dependency floors, use Python
 3.10 and append `-c pdf-translate/constraints-minimum.txt` instead. This matches
-the dedicated minimum-dependency CI job; transitive dependencies still resolve
-for the current platform and must be recorded from the actual run.
+the dedicated minimum-dependency CI job, including its generated-font
+init/rebuild/finish lifecycle and ActualText shaping-gate regression. Transitive
+dependencies still resolve for the current platform and must be recorded from
+the actual run.
 
 Point your agent at the installed skill and ask:
 

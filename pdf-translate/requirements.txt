@@ -8,6 +8,6 @@
 # These are declared compatibility ranges, not a claim every release
 # combination has been exercised. constraints-reference.txt records the
 # direct versions tested locally; CI records what each job actually resolves.
-pymupdf>=1.24.10,<1.30
+pymupdf>=1.27.1,<1.30
 pikepdf>=10.5,<11
 fonttools>=4.40,<5

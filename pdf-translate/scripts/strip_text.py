@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Stage 1 of pdf-translate: prepare a PDF for text replacement.
 
-Deletes ALL page text (BT..ET blocks) from content streams while leaving
+Deletes ALL page text-showing operations from content streams while leaving
 vector graphics, images, and form-field widgets untouched, wraps surviving
 content in q/Q (prevents graphics-state leakage into text you add later),
 and removes the XFA layer if present (hybrid LiveCycle forms render the XFA
@@ -109,21 +109,48 @@ def remove_perms(pdf, report):
     del pdf.Root['/Perms']
 
 
+class StripGraphicsError(ValueError):
+    """Text cannot be removed without losing or guessing graphics semantics."""
+
+
 def strip_ops(owner, pdf=None):
+    """Remove glyph painting, retaining graphics state even inside BT/ET.
+
+    BT/ET reset text matrices, not the graphics state. Colors, line style,
+    and ExtGState changes inside a text object can affect later vector paint.
+    Keep the text objects and their state operators, removing only the four
+    text-show operators. Their text-matrix advances no longer matter because
+    all glyph painting is removed. Text clipping cannot be preserved this
+    way: refuse modes 4–7 rather than silently change subsequent graphics.
+    """
     ops = parse_content_stream(owner)
     out, in_text, removed = [], False, 0
     for operands, op in ops:
         o = str(op)
         if o == 'BT':
+            if in_text or operands:
+                raise StripGraphicsError('Malformed nested or operand-bearing BT')
             in_text = True
             removed += 1
-            continue
-        if o == 'ET':
+        elif o == 'ET':
+            if not in_text or operands:
+                raise StripGraphicsError('Malformed unmatched or operand-bearing ET')
             in_text = False
-            continue
-        if in_text:
+        elif o == 'Tr':
+            if (len(operands) != 1 or not isinstance(operands[0], int)
+                    or not 0 <= operands[0] <= 7):
+                raise StripGraphicsError('Malformed text rendering mode (Tr)')
+            if operands[0] >= 4:
+                raise StripGraphicsError(
+                    f'Unsupported text clipping (Tr {operands[0]}): '
+                    'removing glyphs would change the clipping path')
+        elif o in {'Tj', 'TJ', "'", '"'}:
+            if not in_text:
+                raise StripGraphicsError('Malformed text-show operator outside BT/ET')
             continue
         out.append((operands, op))
+    if in_text:
+        raise StripGraphicsError('Malformed unterminated BT/ET text object')
     return unparse_content_stream(out), removed
 
 
@@ -163,7 +190,7 @@ def resources_of(page_obj):
 
 
 def strip_xobjects(res, pdf, page_index, report, seen, depth=1):
-    """Strip BT..ET from every Form XObject reachable from res, recursively."""
+    """Strip glyph painting from every reachable Form XObject recursively."""
     if res is None:
         return
     xobjs = res.get('/XObject')
@@ -184,7 +211,10 @@ def strip_xobjects(res, pdf, page_index, report, seen, depth=1):
             seen.add(key)
         if xo.get('/Subtype') != Name('/Form'):
             continue
-        xdata, xremoved = strip_ops(xo, pdf)
+        try:
+            xdata, xremoved = strip_ops(xo, pdf)
+        except StripGraphicsError as exc:
+            raise StripGraphicsError(f'Form {name}, depth {depth}: {exc}') from exc
         if xremoved:
             xo.write(b'q\n' + xdata + b'\nQ\n')
             report['form_xobjects_stripped'].append(
@@ -568,6 +598,25 @@ def strip_text(src, dst, hide_buttons=None, captions=None, widget_text=None,
     widget_text = widget_text or {}
 
     pdf = pikepdf.open(src)
+    for i, page in enumerate(pdf.pages):
+        node = page.obj
+        rotation = 0
+        seen = set()
+        while node is not None:
+            marker = getattr(node, 'objgen', None)
+            if marker != (0, 0) and marker in seen:
+                break
+            if marker != (0, 0):
+                seen.add(marker)
+            value = node.get('/Rotate')
+            if value is not None:
+                rotation = int(value) % 360
+                break
+            node = node.get('/Parent')
+        if rotation:
+            pdf.close()
+            raise StripGraphicsError(
+                f'Page {i + 1}: rotated pages are unsupported (Rotate={rotation})')
     report = {'xfa_removed': False, 'pages': [], 'dead_buttons': [],
               'form_xobjects_stripped': [], 'hidden': [],
               'rewritten_captions': [], 'rewritten_widget_text': [],
@@ -595,10 +644,14 @@ def strip_text(src, dst, hide_buttons=None, captions=None, widget_text=None,
             apply_widget_text(field.obj, widget_text[spec_key], t, report)
             seen_widget_text.add(spec_key)
     for i, page in enumerate(pdf.pages):
-        data, removed = strip_ops(page, pdf)
-        page.Contents = pdf.make_stream(b'q\n' + data + b'\nQ\n')
-        report['pages'].append({'page': i, 'text_blocks_removed': removed})
-        strip_xobjects(resources_of(page.obj), pdf, i, report, seen_xobjects)
+        try:
+            data, removed = strip_ops(page, pdf)
+            page.Contents = pdf.make_stream(b'q\n' + data + b'\nQ\n')
+            report['pages'].append({'page': i, 'text_blocks_removed': removed})
+            strip_xobjects(resources_of(page.obj), pdf, i, report, seen_xobjects)
+        except StripGraphicsError as exc:
+            pdf.close()
+            raise StripGraphicsError(f'Page {i + 1}: {exc}') from exc
         for a in page.get('/Annots', []):
             resolved = Field(a)
             t = resolved.name
@@ -694,6 +747,12 @@ def main(argv=None):
                             keep_encryption='--keep-encryption' in argv)
     except WidgetTextError as exc:
         _say(f'FAIL widget text: {exc}')
+        return 2
+    except StripGraphicsError as exc:
+        _say(f'FAIL graphics preservation: {exc}')
+        return 2
+    except pikepdf.PasswordError as exc:
+        _say(f'FAIL password: {exc}')
         return 2
     except CaptionAppearanceError as exc:
         _say(f'FAIL caption appearance: {exc}')
