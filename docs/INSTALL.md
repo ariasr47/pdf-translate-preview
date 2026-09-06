@@ -58,6 +58,11 @@ a complete transitive or cross-platform lock. See the
 resolved dependency versions in private local evidence. Dependency installation
 accesses upstream package servers and their software has its own license terms.
 
+For a reproducible check of the declared direct dependency floors, use Python
+3.10 and append `-c pdf-translate/constraints-minimum.txt` instead. This matches
+the dedicated minimum-dependency CI job; transitive dependencies still resolve
+for the current platform and must be recorded from the actual run.
+
 Point your agent at the installed skill and ask:
 
 > Translate the synthetic sample-input.pdf into Spanish (es-US). Keep the form
@@ -73,3 +78,25 @@ For manual use, follow that workflow with the venv Python executable and a fresh
 job directory. Its `PY`, `SK` and `JOB` names are placeholders, not literal shell
 commands. A scaffold with null translations is unfinished; extraction alone
 does not translate a document. Never label an intermediate PDF a final delivery.
+
+
+Before an expensive rebuild, optionally run `pipeline.py audit-fonts --work JOB`
+using your venv Python and the installed `pdf-translate/scripts/pipeline.py`.
+Add `--output NEW_REPORT.json` to retain a new report; existing files and input
+aliases are refused. Font paths resolve beside `translations.json`, with the
+same legacy caller-relative fallback as rebuild. The job also needs
+`segments.json`. Exit 0 means the checked codepoints are covered; 1 reports
+coverage gaps; 2 reports invalid inputs or report paths.
+
+This read-only advisory checks effective authored text (including occurrence
+replacements, merges, overrides and notices) against each configured role face.
+A gap in an unused face does not necessarily affect the build: actual style use
+is not inferred. Reports include role, page/segment when available, channel and
+missing Unicode codepoints. Coverage does not prove shaping, geometry or all
+styles work. Source markers, tails, passthrough text, widgets and future field
+input are excluded. Final glyph, layout and delivery gates remain authoritative.
+
+Input capability inventory rejects a non-dictionary AcroForm and bounds Python
+graph traversal to 100,000 work items (including primitive leaves) and 128
+levels. These are traversal limits, not parser, decompression, file-size or
+process-memory guarantees. Actions are inventoried without execution.

@@ -447,6 +447,9 @@ def main(argv=None):
     if cmd in ('diagnose', 'audit-form'):
         from diagnostics import main as diagnostics_main
         return diagnostics_main([cmd, *rest])
+    if cmd == 'audit-fonts':
+        from font_audit import main as font_audit_main
+        return font_audit_main(rest)
     if cmd == 'init':
         return cmd_init(rest)
     if cmd == 'from-cores':

@@ -1,0 +1,5 @@
+# Exact direct dependency floors qualified by the public minimum-dependency CI job.
+# Use with requirements.txt; this is not a complete transitive lock file.
+PyMuPDF==1.24.10
+pikepdf==10.5.0
+fonttools==4.40.0

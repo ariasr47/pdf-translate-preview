@@ -7,29 +7,55 @@ ACTION_TYPES = {'/JavaScript', '/URI', '/Launch', '/GoToR', '/GoToE',
 POLICIES = ('preserve-report', 'refuse-active')
 
 
-def inventory(path, max_objects=100000):
-    """Visit reachable dictionaries/arrays with a bounded traversal; no payload execution."""
+def inventory(path, max_objects=100000, max_depth=128):
+    """Bound Python graph work (including leaves), not parser/decompression work.
+
+    Iterator frames avoid eagerly queuing wide arrays. Retained objects prevent
+    direct-wrapper ID reuse; indirect objects are expanded only once.
+    """
+    if max_objects < 1 or max_depth < 1:
+        raise ValueError('PDF inventory budgets must be positive')
     with pikepdf.open(path) as pdf:
-        result = {'actions': [], 'attachments': sorted(str(x) for x in pdf.attachments),
+        acroform = pdf.Root.get('/AcroForm')
+        if acroform is not None and not isinstance(acroform, pikepdf.Dictionary):
+            raise ValueError('PDF catalog /AcroForm must be a dictionary')
+        result = {'actions': [], 'attachments': [],
                   'signatures': [], 'encrypted': pdf.is_encrypted,
                   'permissions': dict(zip(pikepdf.Permissions._fields, map(bool, pdf.allow))),
                   'tagged': '/StructTreeRoot' in pdf.Root,
-                  'xfa': '/XFA' in pdf.Root.get('/AcroForm', {}),
+                  'xfa': acroform is not None and '/XFA' in acroform,
                   'optional_content': '/OCProperties' in pdf.Root}
-        pending = [('catalog', pdf.Root)]
+        pending = [iter([('catalog', pdf.Root, 0)])]
         seen = {}
+        work = 0
+        reserved = 1
         while pending:
-            where, obj = pending.pop()
+            try:
+                where, obj, depth = next(pending[-1])
+            except StopIteration:
+                pending.pop()
+                continue
+            work += 1
+            if work > max_objects:
+                raise ValueError('PDF capability inventory exceeded its work budget')
+            if depth > max_depth:
+                raise ValueError('PDF capability inventory exceeded its depth budget')
             if not isinstance(obj, (pikepdf.Dictionary, pikepdf.Stream, pikepdf.Array)):
                 continue
             key = ('xref', tuple(obj.objgen)) if obj.is_indirect else ('direct', id(obj))
             if key in seen:
                 continue
             seen[key] = obj
-            if len(seen) > max_objects:
-                raise ValueError('PDF capability inventory exceeded its object budget')
+            # pikepdf dictionary items() materializes a Python dict. Check
+            # width before requesting it, and before descending at the limit.
+            child_count = len(obj.stream_dict) if isinstance(obj, pikepdf.Stream) else len(obj)
+            reserved += child_count
+            if reserved > max_objects:
+                raise ValueError('PDF capability inventory exceeded its work budget')
+            if child_count and depth >= max_depth:
+                raise ValueError('PDF capability inventory exceeded its depth budget')
             if isinstance(obj, pikepdf.Array):
-                pending.extend((f'{where}[{i}]', x) for i, x in enumerate(obj))
+                pending.append(_array_children(obj, where, depth))
                 continue
             action_type = str(obj.get('/S', ''))
             if action_type in ACTION_TYPES:
@@ -37,9 +63,20 @@ def inventory(path, max_objects=100000):
             if obj.get('/Type') == pikepdf.Name('/Sig') or '/ByteRange' in obj:
                 result['signatures'].append({'location': where,
                     'has_byte_range': '/ByteRange' in obj, 'has_contents': '/Contents' in obj})
-            pending.extend((f'{where}{name}', value) for name, value in obj.items())
+            pending.append(_dictionary_children(obj, where, depth))
+        result['attachments'] = sorted(str(x) for x in pdf.attachments)
         result['actions'].sort(key=lambda x: (x['location'], x['type']))
         return result
+
+
+def _array_children(obj, where, depth):
+    for i, value in enumerate(obj):
+        yield f'{where}[{i}]', value, depth + 1
+
+
+def _dictionary_children(obj, where, depth):
+    for name, value in obj.items():
+        yield f'{where}{name}', value, depth + 1
 
 
 def enforce(report, policy):

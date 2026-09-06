@@ -54,3 +54,22 @@ explicit review. No such findings were suppressed in this measurement.
 
 This small convenience corpus does not establish a population success rate,
 accessibility, native viewer compatibility or human-reviewed translation quality.
+
+## Follow-up investigation
+
+Reverification reproduced the seven IRS 1040-ES and two OPM SF15 leak findings.
+The authored mappings deliberately retain these strings. The Treasury payee
+and SF15 document title/status have operational context; the quoted USPS rule
+label is explanatory wording. Quotation alone does not settle whether words
+should stay in the source language.
+
+The instrument also has a confirmed authoring defect: it promotes split quoted
+fragments into a document-wide protection list. A wrapped payee contributes
+`United`, which then survives in unrelated privacy-notice prose. Future
+instrument authoring should bind preservation to the actual page and segment
+occurrences. Do not add blanket candidate exemptions or global token allowlists
+to improve the score. Any new measurement must record a changed instrument
+hash separately from runtime changes.
+
+The existing 3/13 result and archived outputs remain unchanged. This
+investigation is not a new translation qualification.

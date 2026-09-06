@@ -16,6 +16,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 ROOT_FILES = {'SKILL.md', 'README.md', 'LICENSE', 'requirements.txt', 'constraints-reference.txt',
+              'constraints-minimum.txt',
               'THIRD_PARTY_NOTICES.md', 'COPYING.AGPL-3.0'}
 DIRECTORIES = {'scripts': '.py', 'references': '.md', 'schemas': '.json'}
 REQUIRED = {'SKILL.md', 'LICENSE', 'COPYING.AGPL-3.0', 'THIRD_PARTY_NOTICES.md', 'requirements.txt', 'scripts/pipeline.py',

@@ -12,7 +12,7 @@ compatibility: >-
   Local scripts are provider-neutral. Network access is optional for running
   the engine and useful for issuer terminology and licensed font research.
 metadata:
-  version: "52"
+  version: "53"
 ---
 
 # PDF translation with verifiable form preservation

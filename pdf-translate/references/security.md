@@ -12,8 +12,10 @@ payloads. `--content-policy refuse-active` refuses non-local-GoTo actions and
 attachments. Local GoTo navigation remains allowed. No sanitization mode is
 implemented; do not describe preserve-report as safe-content certification.
 
-The inventory has a 100,000-object traversal budget. Native PDF parsers and
-renderers are not a process sandbox. For hostile or very large inputs, use an
+The inventory reserves at most 100,000 graph work items, including primitive
+leaves and repeated references, and limits traversal depth to 128. These Python
+traversal bounds do not limit parser or decompression work. Native PDF parsers
+and renderers are not a process sandbox. For hostile or very large inputs, use an
 isolated low-privilege environment with host-enforced CPU, memory, disk and
 network limits. This release does not provide cross-platform native-parser
 resource isolation. It refuses unsupported structures where detected, not all

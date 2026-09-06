@@ -1,3 +1,28 @@
+# 53.0.0 — dependency qualification and earlier diagnostics
+
+Corrected unsupported dependency floors to the measured working baseline:
+PyMuPDF 1.24.10, pikepdf 10.5.0 and fonttools 4.40.0. Exact constraints and a
+Python 3.10 CI job exercise public regressions and copied-folder smoke, retaining
+resolved versions. Intermediate patches and every possible mixture are not
+claimed as tested.
+
+Malformed AcroForm entries now produce a concise preflight refusal. Inventory
+reserves a bounded amount of graph work before expanding children and limits
+depth, including primitive leaves and repeated references. These limits do not
+sandbox native parsing or decompression.
+
+The optional `audit-fonts` command reports codepoint gaps by font role and
+available page/segment context before layout. It checks all effective authored
+text against each face, without inferring actual role usage. Coverage remains
+advisory; shaping, overflow and final delivery checks are still required.
+Ten new public regressions cover these behaviors on both the current and
+minimum local environments.
+
+The benchmark follow-up reproduced nine deliberate retained-source findings
+and identified document-global fragment protection in benchmark authoring.
+No leak gate, allowlist, archived result or translation success count changed.
+Human, native-viewer and accessibility qualifications remain unestablished.
+
 # 52.0.0 — failure reporting and maintenance
 
 Python tracebacks now appear in diagnostic reports, including chained and
