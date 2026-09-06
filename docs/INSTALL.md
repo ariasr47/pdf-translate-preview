@@ -84,6 +84,7 @@ does not translate a document. Never label an intermediate PDF a final delivery.
 
 Before an expensive rebuild, optionally run `pipeline.py audit-fonts --work JOB`
 using your venv Python and the installed `pdf-translate/scripts/pipeline.py`.
+Add repeatable `--candidate FONT` options to compare possible faces.
 Add `--output NEW_REPORT.json` to retain a new report; existing files and input
 aliases are refused. Font paths resolve beside `translations.json`, with the
 same legacy caller-relative fallback as rebuild. The job also needs
@@ -92,11 +93,21 @@ coverage gaps; 2 reports invalid inputs or report paths.
 
 This read-only advisory checks effective authored text (including occurrence
 replacements, merges, overrides and notices) against each configured role face.
+A candidate path resolves from the caller and is checked against all effective
+authored text, including retained identifiers. Candidate results do not select,
+replace or rewrite configured fonts and do not change the configured-font exit
+status.
 A gap in an unused face does not necessarily affect the build: actual style use
 is not inferred. Reports include role, page/segment when available, channel and
 missing Unicode codepoints. Coverage does not prove shaping, geometry or all
 styles work. Source markers, tails, passthrough text, widgets and future field
 input are excluded. Final glyph, layout and delivery gates remain authoritative.
+
+QA diagnoses unsupported authored C0/C1 controls with exact code points and
+available mapping context. Rebuild refuses the same controls before creating an
+output. TAB, LF and CR are allowed. U+00AD SOFT HYPHEN is retained and produces
+a separate warning for review of the discretionary break; it is not normalized
+away.
 
 Input capability inventory rejects a non-dictionary AcroForm and bounds Python
 graph traversal to 100,000 work items (including primitive leaves) and 128

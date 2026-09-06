@@ -18,6 +18,12 @@ the identifier `ZX-2048` also needs Latin letters, digits and punctuation.
 Run `audit-fonts`, then rebuild with the exact configured role fonts; do not
 assume script coverage implies coverage for retained codes.
 
+Use repeatable `--candidate FONT` options to compare possible faces against the
+full effective authored text before changing the mapping. Candidate paths are
+caller-relative. The report records each candidate's missing Unicode code
+points, but it performs no font selection or replacement and does not change
+the configured-font exit status. Review shaping and licensing separately.
+
 ## CJK (Japanese, Chinese Simplified/Traditional, Korean)
 
 Google Fonts ships glyf-flavored VARIABLE TTFs — the reliable source:

@@ -59,7 +59,7 @@ import unicodedata
 _SCRIPTS = os.path.dirname(os.path.abspath(__file__))
 if _SCRIPTS not in sys.path:
     sys.path.insert(0, _SCRIPTS)
-from text_model import effective_texts, plain_text
+from text_model import authored_text_diagnostics, effective_texts, plain_text
 from extract_segments import write_find_say_hits  # noqa: E402
 from verify import SPACELESS_SCRIPTS, dominant_script, strip_inline_markup  # noqa: E402
 
@@ -339,7 +339,7 @@ def qa_check(translations_path, segments_path=None, glossary_path=None, widget_t
     except ValueError as exc:
         return [_finding('markup-or-mapping', 'error', '', str(exc))]
     target_script = dominant_script('\n'.join(r['target'] for r in rows)) or 'Latin'
-    findings = []
+    findings = authored_text_diagnostics(rows)
     terms = load_glossary(glossary_path) if glossary_path else []
     for row in rows:
         if (row['channel'] == 'notice' and not row.get('source_supplied')) or row.get('source_supplied') is False:
@@ -396,8 +396,14 @@ def main(argv=None):
     errors = [f for f in findings if f['severity'] == 'error']
     warns = [f for f in findings if f['severity'] != 'error']
     for f in findings[:200]:
+        context = ''
+        if f['kind'] in {'unsupported-control', 'soft-hyphen'}:
+            values = [f'{key}={f[key]}' for key in
+                      ('channel', 'page', 'segment_id', 'occurrence_id', 'widget_path', 'part_index')
+                      if f.get(key) is not None]
+            context = f" [{', '.join(values)}]" if values else ''
         _say(f"{f['severity'].upper():5} {f['kind']:13} {f['core'][:48]!r}: "
-             f"{f['detail']}")
+             f"{f['detail']}{context}")
     _say(f'qa_check: {len(errors)} error(s), {len(warns)} warning(s) over '
          f'{translations}')
     if not findings:

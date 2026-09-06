@@ -12,7 +12,7 @@ compatibility: >-
   Local scripts are provider-neutral. Network access is optional for running
   the engine and useful for issuer terminology and licensed font research.
 metadata:
-  version: "54"
+  version: "55"
 ---
 
 # PDF translation with verifiable form preservation
@@ -61,7 +61,10 @@ that the translated derivative is accessible or signed.
    Re-run `init` with `--widget-text JOB/widget_text.json` to apply those edits.
 4. Choose licensed fonts and prepare coverage using [fonts](references/fonts.md).
    Use real regular/bold/italic faces when available. Field input requires a
-   full target-script font, not merely the subset used on the page.
+   full target-script font, not merely the subset used on the page. Before
+   rebuild, `audit-fonts --work JOB --candidate FONT` may be repeated to compare
+   possible faces against all effective authored text. It is advisory and does
+   not select, replace or rewrite the configured fonts.
 5. Run `qa --work JOB`, then `rebuild SOURCE.pdf JOB/out.pdf --work JOB`.
    Rebuild supplies mapping, segment and source-word gates by default.
    Read [gates](references/gates.md) and the scale report. Repair overflow or

@@ -58,11 +58,16 @@ result requires investigation, not manual relabeling of the report as a pass.
 ### Optional early font coverage audit
 
 After authoring targets and configuring fonts, before rebuild, run
-`PY SK/scripts/pipeline.py audit-fonts --work JOB [--output NEW_REPORT.json]`.
+`PY SK/scripts/pipeline.py audit-fonts --work JOB [--candidate FONT ...]
+[--output NEW_REPORT.json]`.
 This read-only advisory reports codepoint gaps by role and effective text
 channel, with segment/page context where available. Font paths resolve relative
-to the mapping, matching rebuild. Exit 1 means coverage gaps; exit 2 means an
-input/report error. Existing reports are never overwritten.
+to the mapping, matching rebuild. Each repeatable candidate path resolves from
+the caller and is compared against the complete effective authored text. The
+candidate results do not select, replace or rewrite configured fonts. Exit 1
+continues to describe gaps in configured fonts; a candidate result does not
+change it. Exit 2 reports invalid inputs or report paths. Existing reports are
+never overwritten.
 
 Every role is checked against the authored text as a diagnostic comparison;
 actual role usage is not inferred, so an unused-face gap is not a rebuild gate.
@@ -70,3 +75,9 @@ Coverage is not proof of shaping, geometry, fallback behavior or all styles.
 Source markers, tails, passthrough text, widgets and future field input are
 excluded. Final glyph/layout checks and the complete delivery workflow remain
 required.
+
+QA reports unsupported authored C0/C1 controls before other comparisons, with
+the code point and available channel/page/segment context. TAB, LF and CR are
+allowed. Rebuild refuses the same unsupported controls before creating output.
+U+00AD SOFT HYPHEN is retained as authored and reported separately for review
+of the discretionary break; neither command removes or normalizes it.

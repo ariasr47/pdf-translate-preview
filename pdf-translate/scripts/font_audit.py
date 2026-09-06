@@ -52,7 +52,24 @@ def _validate_inputs(conf, data):
     return segments
 
 
-def audit(work):
+def _coverage(font, rows):
+    missing = []
+    for row in rows:
+        parts = row.get('placement_targets', [row['target']])
+        for part_index, target in enumerate(parts):
+            chars = missing_glyphs(font, target)
+            if chars:
+                item = {**{k: row[k] for k in
+                           ('channel', 'segment_id', 'occurrence_id', 'page')
+                           if k in row and row[k] is not None},
+                        'codepoints': [f'U+{ord(ch):04X}' for ch in chars]}
+                if len(parts) > 1:
+                    item['part_index'] = part_index
+                missing.append(item)
+    return missing
+
+
+def audit(work, candidates=None):
     work = Path(work)
     mapping = work / 'translations.json'
     segments_path = work / 'segments.json'
@@ -84,31 +101,43 @@ def audit(work):
             font = pymupdf.Font(fontfile=str(path))
         except (RuntimeError, OSError, ValueError, pymupdf.mupdf.FzErrorBase) as exc:
             raise ValueError(f'Cannot load font role {role}: {path}: {exc}') from exc
-        missing = []
-        for row in rows:
-            chars = missing_glyphs(font, row['target'])
-            if chars:
-                missing.append({**{k: row[k] for k in ('channel', 'segment_id', 'page') if k in row},
-                                'codepoints': [f'U+{ord(ch):04X}' for ch in chars]})
+        missing = _coverage(font, rows)
         faces.append({'role': role, 'font': str(path), 'missing': missing,
                       'scope': 'All effective authored text checked against this face; actual role usage is not inferred.'})
+    candidate_paths = [Path(value).absolute() for value in (candidates or [])]
+    candidate_results = []
+    for path in candidate_paths:
+        try:
+            font = pymupdf.Font(fontfile=str(path))
+        except (RuntimeError, OSError, ValueError, pymupdf.mupdf.FzErrorBase) as exc:
+            raise ValueError(f'Cannot load candidate font {path}: {exc}') from exc
+        missing = _coverage(font, rows)
+        candidate_results.append({
+            'font': str(path),
+            'status': 'coverage_gaps' if missing else 'codepoints_covered',
+            'missing': missing,
+            'scope': 'Advisory comparison against all effective authored text; no font selection or replacement occurred.',
+        })
     report = {'schema_version': '1.0', 'advisory': True,
               'status': 'coverage_gaps' if any(f['missing'] for f in faces) else 'codepoints_covered',
-              'delivery_decision': 'unchanged', 'faces': faces, 'notes': notes,
+              'delivery_decision': 'unchanged', 'faces': faces,
+              'candidates': candidate_results, 'notes': notes,
               'limits': ['Coverage does not establish shaping, geometry, fallback behavior or all-style layout.',
                          'A gap in an unused role may not affect rendering; this is not an automatic rebuild gate.',
                          'Excluded: source markers, tails, passthrough text, widgets and future field input.',
                          'Final glyph, layout, verification and delivery gates remain authoritative.']}
-    return report, [mapping, segments_path, *paths.values()]
+    return report, [mapping, segments_path, *paths.values(), *candidate_paths]
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--work', required=True, type=Path)
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--candidate', action='append', default=[], type=Path,
+                        help='caller-relative font to compare without selecting or replacing it')
     args = parser.parse_args(argv)
     try:
-        report, inputs = audit(args.work)
+        report, inputs = audit(args.work, args.candidate)
         if args.output:
             write_report(args.output, report, inputs)
         print(json.dumps(report, ensure_ascii=False, indent=2))

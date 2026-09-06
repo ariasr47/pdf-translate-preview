@@ -1,4 +1,4 @@
-# Experimental PDF translation skill — 54.0.0
+# Experimental PDF translation skill — 55.0.0
 
 This folder is a self-contained Agent Skill for translating supported
 born-digital PDFs with strict layout and AcroForm checks. Read [SKILL.md](SKILL.md)

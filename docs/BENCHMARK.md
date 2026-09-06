@@ -87,3 +87,28 @@ for this subset and does not change the historical 3/13 measurement, establish
 a population success rate, or add human, native-viewer or accessibility review.
 Document-global fragment protection remains an authoring limitation; future
 work should preserve source content by exact occurrence where appropriate.
+
+## Version 55 controlled diagnostic replay
+
+The version-55 comparison reused four controlled cases and separated instrument
+changes from runtime behavior. The updated instrument changed 102 diagnostic
+occurrences: 96 GSA, 5 IRS, 1 NASA and 0 OPM. With the version-54 runtime, all
+four strict failure outcomes were unchanged, so these changes are not engine
+translation improvements.
+
+With the version-55 runtime and the same instrument, IRS, GSA and OPM retained
+their strict failure results (7, 5 and 2 findings). Their 21 rendered pages were
+pixel-identical. NASA now stops earlier during rebuild on six U+0003 controls
+and writes no output; QA reports those six errors, two retained soft-hyphen
+warnings and the existing URL warning. Direct rebuild returned 1 and left its
+inputs unchanged.
+
+Advisory candidate checks found that the explicit Arabic Arial and Hindi
+Nirmala faces covered all effective target code points, including retained
+Latin identifiers. The configured script fonts still had gaps and audit exit 1
+remained unchanged; the candidates were not selected or substituted.
+
+These are pseudo-localized or controlled mechanical cases. None is a delivered,
+human-reviewed translation, and the replay adds no natural-language quality,
+native-viewer or accessibility qualification. It does not replace the historical
+3/13 measurement or version-54 frozen subset.

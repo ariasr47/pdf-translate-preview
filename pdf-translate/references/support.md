@@ -42,7 +42,10 @@ extraction behavior needed by the Arabic shaping check. Password-protected input
 nonzero inherited or direct `/Rotate` values are refused before text stripping.
 Version 54 locally qualified this exact minimum set and the Windows Python 3.14
 reference set (PyMuPDF 1.28.2, pikepdf 10.13.0.post1 and fonttools 4.64.0).
-Public CI for the published source commit remains pending.
+For version 55, inspect the public Actions run whose head SHA is the exact source
+commit being used. The preceding version-54 public CI run is
+[34056891624](https://github.com/ariasr47/pdf-translate-preview/actions/runs/34056891624);
+it is historical evidence for that earlier commit.
 Text used as a clipping path is also refused because removing it would change
 page graphics. A source that requires a password refuses; the CLI does not
 accept, bypass or recover passwords. Ask the user for an authorized accessible
@@ -55,10 +58,15 @@ graphics defect did not occur on WHO and should not be attributed to it.
 
 Mixed-script fonts must cover retained source tokens as well as the target
 script; `ZX-2048`, for example, requires Latin letters, digits and punctuation.
-Known open areas include deciding which meaningful source control characters
-(including soft hyphens) to preserve and binding benchmark preservation to
-specific occurrences instead of document-global fragments. These are measured
-limitations; do not weaken font, ink or source-leak gates to work around them.
+Version 55 adds repeatable advisory candidate-font comparisons over that full
+effective authored text. Candidates are not selected or substituted, and their
+coverage does not change the configured-font audit exit status. Unsupported
+authored C0/C1 controls now produce contextual QA diagnostics and an early
+rebuild refusal. TAB, LF and CR remain allowed. U+00AD SOFT HYPHEN remains in
+the authored text and receives a separate discretionary-break warning; it is
+not removed or normalized. Occurrence-specific benchmark preservation remains
+an open measured limitation; do not weaken font, ink or source-leak gates to
+work around it.
 
 Final choice appearance caching supports tested combo/list fields, inherited
 fields and quarter-turn rotation. Scrolling lists with nonzero /TI, ambiguous

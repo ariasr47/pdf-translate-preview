@@ -1,3 +1,38 @@
+# 55.0.0 — authored-text diagnostics and font comparison
+
+Version 55 reports unsupported authored C0/C1 controls with exact Unicode code
+points and available channel, page, segment and occurrence context. QA reports
+them before source-comparison skips, and rebuild refuses them before font/PDF
+work or output creation. TAB, LF and CR remain allowed. U+00AD SOFT HYPHEN is
+retained and reported separately for discretionary-break review; it is not
+removed or normalized.
+
+`audit-fonts` now accepts repeatable `--candidate FONT` options. Each candidate
+is compared against all effective authored text, including retained Latin
+identifiers in Arabic or Devanagari jobs. This is an advisory comparison: it
+does not select, replace or rewrite configured fonts, and candidate coverage
+does not change the configured-font exit status.
+
+With the updated instrument on the version-54 runtime, the controlled four-case
+replay recorded 102 changed diagnostic occurrences: 96 GSA, 5 IRS, 1 NASA and
+0 OPM. All four strict outcomes remained unchanged in that instrument-only
+comparison. With the version-55 runtime and the same instrument, IRS, GSA and
+OPM retained their strict failures and their 21 output pages were
+pixel-identical; NASA instead refuses earlier at rebuild on six U+0003 controls.
+QA also reports two soft-hyphen warnings and the existing URL warning. Explicit
+Arabic Arial and Hindi Nirmala candidate checks covered all effective targets
+while the configured script fonts still had gaps; audit exit 1 remained
+unchanged.
+
+These are controlled mechanical results using pseudo-localized or authored test
+inputs. They are not natural-language translation-quality evidence. The 3/13
+version-51 benchmark and version-54 frozen subset remain historical records,
+and no new qualified human linguistic, native-viewer or accessibility result is
+claimed. For published validation, inspect the Actions run whose head SHA
+matches the exact source commit. The
+[preceding version-54 run](https://github.com/ariasr47/pdf-translate-preview/actions/runs/34056891624)
+is evidence only for that earlier commit. No formal GitHub Release is claimed.
+
 # 54.0.0 — conservative preservation and input refusals
 
 Version 54 corrects graphics-state preservation for demonstrated cases during
@@ -30,10 +65,10 @@ punctuation even in Arabic or Devanagari output. Meaningful source control
 characters, including soft hyphens, and occurrence-specific benchmark
 preservation remain open measured limitations.
 
-This is still an experimental, supervised, document-specific source preview.
+This remained an experimental, supervised, document-specific source preview.
 No qualified human linguistic, native-viewer or accessibility review was added.
-Public CI for the source commit remains pending until publication. No formal
-GitHub Release is claimed.
+Its subsequent public CI record is linked from the current release section. No
+formal GitHub Release was claimed.
 
 # 53.0.0 — dependency qualification and earlier diagnostics
 

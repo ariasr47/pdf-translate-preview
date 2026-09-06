@@ -1,17 +1,18 @@
 # Qualification matrix
 
 Prepared 2026-09-06. Experimental supervised source preview; success remains
-document-specific. Version 54 adds demonstrated graphics-state preservation and
-early input refusals. Translation and human/viewer scope remain unqualified.
+document-specific. Version 55 adds authored-control diagnostics/refusal and
+advisory candidate-font comparisons. Translation and human/viewer scope remain
+unqualified.
 
 | Area | Demonstrated evidence and limits |
 |---|---|
 | Starting scope | Proposed simple-form trials: 1–5 pages, at most 50 widgets, visible born-digital text; all further input and delivery gates apply |
 | AcroForm | Automated field/export/geometry and fill round-trip checks; supported cached choices and normal/pressed/rollover captions; no universal interactive-viewer guarantee |
 | Windows | Actual Python 3.14 fresh-environment Spanish and Arabic synthetic lifecycle checks passed for version 51 |
-| Automated tests | 363 development tests and 38 exported public tests passed locally |
+| Automated tests | Version 55 development tests passed locally; inspect exact-commit public CI for the exported suite |
 | Frozen replay | 3/7 public documents and 14/24 actual-translation synthetic cases mechanically finalized; 6 synthetic rebuild refusals and 4 rotation init refusals; all 28 passing final pages pixel-identical |
-| CI | Public CI for version 54 is pending source publication; check the exact commit's Actions results when available. CI does not exercise native viewers |
+| CI | Inspect the Actions run whose head SHA matches the exact source commit. CI does not exercise native viewers |
 | Agent host | Prior bounded Windows Claude CLI negative/positive/injection cases passed their recorded scopes; these do not qualify every task or agent host |
 | Human linguistic review | Not performed; a paired local canary packet and MQM-based public protocol are prepared |
 | Acrobat / Preview / browser | Not performed. Adobe failed at startup before opening the PDF, no macOS viewer is available here, and the attempted local browser PDF route was blocked by tool policy. These are not PDF compatibility results |
@@ -24,8 +25,10 @@ inspected by the model. The recorded version-51 run independently reverified
 the sealed PDF without modifying it; version 54 only hash-checked retained
 sealed jobs. Human and viewer review categories remain pending.
 
-The preceding public CI run is
-[available here](https://github.com/ariasr47/pdf-translate-preview/actions/runs/34003926963).
+The preceding version-54 public CI run is
+[available here](https://github.com/ariasr47/pdf-translate-preview/actions/runs/34056891624).
+It is evidence for that earlier commit; use the exact-commit Actions run for
+version 55.
 Installation on macOS is not a Preview interaction test. CI archives are build
 artifacts, separate from a GitHub Release and from product qualification.
 
@@ -44,9 +47,14 @@ accept, bypass or recover passwords; ask the user for an authorized accessible
 copy and process that copy as a new input.
 
 For mixed-script output, configured fonts must cover retained tokens such as
-`ZX-2048` as well as the target script. Meaningful control-character handling
-(including soft hyphens) and occurrence-specific benchmark preservation remain
-open measured limitations. Do not weaken font, ink or leak gates around them.
+`ZX-2048` as well as the target script. Version 55 can compare repeatable
+candidate fonts against the full effective authored text, but it does not select
+or replace configured fonts and candidate coverage does not change the audit
+exit status. Unsupported authored C0/C1 controls produce contextual QA findings
+and an early rebuild refusal; TAB, LF and CR remain allowed. Soft hyphens are
+retained and receive a separate discretionary-break warning rather than being
+removed or normalized. Occurrence-specific benchmark preservation remains an
+open measured limitation. Do not weaken font, ink or leak gates around it.
 
 Record every new result with input/output hashes, exact runtime/environment,
 locale, font set, checks, reviewer/app versions and limitations. The

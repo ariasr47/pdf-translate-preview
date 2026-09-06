@@ -96,21 +96,7 @@ _RTL_RANGES = (
 )
 
 
-def seg_dir(seg):
-    """Unit line direction of a segment; (1, 0) when absent or unusable."""
-    d = seg.get('dir') or (1.0, 0.0)
-    try:
-        dx, dy = float(d[0]), float(d[1])
-    except (TypeError, ValueError, IndexError, KeyError):
-        return 1.0, 0.0
-    n = math.hypot(dx, dy)
-    if n < 1e-9:
-        return 1.0, 0.0
-    return dx / n, dy / n
-
-
-def is_rotated(dx, dy):
-    return abs(dx - 1.0) > 1e-6 or abs(dy) > 1e-6
+from text_model import seg_dir, is_rotated
 
 
 def rotation_morph(x, y, dx, dy):
@@ -276,11 +262,7 @@ def wrap_last_stream_actualtext(page, logical):
 # Inline weight/style markup allowed in a SINGLE-LINE target, the way
 # merges already allow it. Deliberately narrow: only these tags count as
 # markup, so a translation that genuinely contains "<" is left alone.
-INLINE_TAGS = re.compile(r'</?(?:b|i|em|strong)\s*/?>', re.I)
-
-
-def has_inline_markup(text):
-    return bool(INLINE_TAGS.search(text or ''))
+from text_model import has_inline_markup, composition_fragments
 
 
 def strip_inline_markup(text):
@@ -610,11 +592,22 @@ def retypeset(stripped, segf, trf, out):
         return 1
     segd = _load_json(segf)
     conf = _load_json(trf)
-    from text_model import effective_texts, segment_target, plain_text
+    from text_model import authored_text_diagnostics, effective_texts, segment_target, plain_text
     try:
-        effective_texts(conf, segd['segments'])
+        authored_rows = effective_texts(conf, segd['segments'])
     except ValueError as exc:
         print(f'FAIL: {exc}')
+        return 1
+    controls = [finding for finding in authored_text_diagnostics(authored_rows)
+                if finding['severity'] == 'error']
+    if controls:
+        for finding in controls[:20]:
+            context = ', '.join(
+                f'{key}={finding[key]}' for key in
+                ('channel', 'page', 'segment_id', 'occurrence_id', 'widget_path', 'part_index')
+                if finding.get(key) is not None)
+            print(f"FAIL: unsupported authored control {finding['codepoint']}"
+                  f" ({context}): {finding['detail']}")
         return 1
     T = conf['translations']
     merges = conf.get('merges', [])
@@ -1057,7 +1050,7 @@ def retypeset(stripped, segf, trf, out):
                 continue
             inline_markup = has_inline_markup(jp)
             if not inline_markup:
-                jp = '‖'.join(plain_text(part, strip=False) for part in jp.split('‖'))
+                jp = '‖'.join(plain_text(part, strip=False) for part in composition_fragments(jp, 'segment'))
             if inline_markup and not rot:
                 # Mixed weights inside one line: the Story engine resolves
                 # <b>/<i> against the four font roles, the way merges do.
@@ -1276,7 +1269,7 @@ def retypeset(stripped, segf, trf, out):
     # what the page has room for.
     for i, n in enumerate(notices):
         pno = n['page']
-        parts = [plain_text(p) for p in str(n['text']).split('‖')]
+        parts = [plain_text(p) for p in composition_fragments(str(n['text']), 'notice')]
         size = float(n.get('size') or NOTICE_SIZE)
         key = f'notices[{i}]'
         plain = ' '.join(p.strip() for p in parts if p.strip())
