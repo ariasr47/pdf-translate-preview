@@ -76,7 +76,7 @@
   "tests/test_public_regressions.py": "8bd84777cf8d0fe94dcfb9a22dc24169427a499fcf6e874d4e11f09d7d3adc3d",
   "tests/test_semantic_regressions.py": "1b43c4494fedb69525a92c4c72ddef46f00ba3d4740b49a06ec84645ea573df4",
   "tests/test_strip_graphics_semantics.py": "ab7b8210db74747b6e8ead40db21813170ba1dbe357545d293955cb86b7e2e6a",
-  "tests/test_text_quality.py": "4555f5208edab4b8b9c805e590a3cdf3a4d63ea1f69e0c48213fd5ba7a7433b0",
+  "tests/test_text_quality.py": "4624d9a26a310005c806531a5a3109fbd3f34bb5155d730acc7b4fefefb95010",
   "tools/build_release.py": "43c70d7d901c0a92af2d4bf2e1ab729ea9def67de2789ee4fc6a49afc9a11e24",
   "tools/refresh_inventory.py": "2d6f1fcb1f385329c00e3b661432652078a0cd20ebe637619911b30f00e4bf41",
   "tools/verify_preview.py": "8c0560bebdd286982c9fa9aac34304d15c8c6a98b93b6c7fafc2d0e6227f19ae"
