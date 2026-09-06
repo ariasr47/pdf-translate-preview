@@ -1,3 +1,21 @@
+# 52.0.0 — failure reporting and maintenance
+
+Python tracebacks now appear in diagnostic reports, including chained and
+truncated traces. Expected caption refusals emit a concise field-specific
+failure instead of an uncaught traceback. Refusal gates and PDF rendering are
+unchanged. The archived FDA failure now produces useful diagnostics and the
+same input still refuses without writing an output or altering its source.
+
+Validation: 326 runtime, 15 grader and 17 tooling tests passed.
+Eight diagnostic regressions are now included in the public suite (18 tests
+total). The artifact-upload action was reviewed against its official v7.0.1
+release, updated by immutable commit and tested across the CI matrix. The
+reviewed dependency PR passed after refreshing its exact source inventory.
+No checksum checks or PDF gates were disabled.
+
+The version-51 translation/benchmark qualifications below remain their measured
+scope; this update does not establish new viewer or human qualifications.
+
 # 51.0.0 — experimental source preview
 
 Prepared 2026-09-05. This source update does not imply a GitHub Release exists.

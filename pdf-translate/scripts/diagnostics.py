@@ -34,23 +34,40 @@ GUIDANCE = (
 )
 
 
+def _issue(message):
+    category, step = 'unknown', 'Inspect this stage and its complete log. Do not discard an unfamiliar failure or treat partial output as final.'
+    for name, patterns, action in GUIDANCE:
+        if any(pattern in message.lower() for pattern in patterns):
+            category, step = name, action
+            break
+    return {'category':category, 'message':message, 'evidence':[], 'next_step':step}
+
+
 def diagnose(log):
     issues = []
+    traceback = None
     for line in log.splitlines():
-        if line.startswith(('FAIL', '!!', 'ERROR')):
-            category, step = 'unknown', 'Inspect this stage and its complete log. Do not discard an unfamiliar failure or treat partial output as final.'
-            for name, patterns, action in GUIDANCE:
-                if any(pattern in line.lower() for pattern in patterns):
-                    category, step = name, action
-                    break
-            issues.append({'category': category, 'message': line, 'evidence': [], 'next_step': step})
+        if line.startswith('Traceback (most recent call last):'):
+            traceback = _issue(line)
+            issues.append(traceback)
+        elif line.startswith(('FAIL', '!!', 'ERROR')):
+            traceback = None
+            issues.append(_issue(line))
+        elif traceback is not None:
+            if re.fullmatch(r'(?:[A-Za-z_]\w*\.)*[A-Za-z_]\w*(?::.*)?',line):
+                terminal = _issue(line)
+                terminal['evidence'] = traceback['evidence']
+                traceback.update(terminal)
+                traceback = None
+            elif line.strip():
+                traceback['evidence'].append(line)
         elif issues and line[:1].isspace():
             issues[-1]['evidence'].append(line.strip())
     return {'schema_version': '1.0', 'status': 'analysis_complete',
             'delivery_decision': 'unchanged', 'issues': issues,
             'evidence_is_untrusted_data': True,
             'page_numbering': 'Retained exactly as emitted by the originating stage.',
-            'limitation': 'This parses explicit failure lines; no failures found is not a successful verification receipt.'}
+            'limitation': 'This parses explicit failure lines and Python tracebacks; no failures found is not a successful verification receipt.'}
 
 
 def audit_form(path):

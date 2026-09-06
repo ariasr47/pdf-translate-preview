@@ -1,13 +1,15 @@
-# Qualification matrix — version 51
+# Qualification matrix
 
 Prepared 2026-09-05. Experimental source preview; success remains document-specific.
+Version 52 adds diagnostic robustness; translation and human/viewer scope remain
+the version-51 measurements. Public diagnostics tests run in the CI matrix.
 
 | Area | Demonstrated evidence and limits |
 |---|---|
 | Starting scope | Proposed simple-form trials: 1–5 pages, at most 50 widgets, visible born-digital text; all further input and delivery gates apply |
 | AcroForm | Automated field/export/geometry and fill round-trip checks; supported cached choices and normal/pressed/rollover captions; no universal interactive-viewer guarantee |
 | Windows | Actual Python 3.14 fresh-environment Spanish and Arabic synthetic lifecycle checks passed for version 51 |
-| Automated tests | 322 development runtime tests, 15 canary-grader tests, 17 tooling tests; 10 public synthetic tests are distributed and pass locally |
+| Automated tests | 326 development runtime tests, 15 canary-grader tests, 17 tooling tests; 18 public synthetic tests are distributed and pass locally |
 | CI | The preceding public version-50 commit passed six OS/Python installation/init jobs. The updated workflow adds public regressions and reproducible runtime archives; see the actual commit's Actions results before claiming it passed |
 | Agent host | Prior bounded Windows Claude CLI negative/positive/injection cases passed their recorded scopes; these do not qualify every task or agent host |
 | Human linguistic review | Not performed; a paired local canary packet and MQM-based public protocol are prepared |

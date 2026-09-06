@@ -674,6 +674,7 @@ def _say(line):
 
 
 def main(argv=None):
+    from caption_appearances import CaptionAppearanceError
     argv = list(sys.argv[1:] if argv is None else argv)
     src, dst = argv[0], argv[1]
     hide = []
@@ -693,6 +694,9 @@ def main(argv=None):
                             keep_encryption='--keep-encryption' in argv)
     except WidgetTextError as exc:
         _say(f'FAIL widget text: {exc}')
+        return 2
+    except CaptionAppearanceError as exc:
+        _say(f'FAIL caption appearance: {exc}')
         return 2
     _say(json.dumps(report, indent=2, ensure_ascii=False))
     if report.get('perms_removed'):
