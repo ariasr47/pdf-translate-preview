@@ -13,12 +13,29 @@ pass does not establish correct meaning or working form entry in every viewer.
 
 ## Install and try
 
-Follow the [Windows or macOS installation instructions](docs/INSTALL.md).
-Install the complete `pdf-translate/` directory in your agent host's documented
-skill location. Read [SKILL.md](pdf-translate/SKILL.md) and the
-[job workflow](pdf-translate/references/workflow.md). Host setup is separate from
-installing Python dependencies; this preview does not assume a particular plugin
-marketplace or host-specific installer.
+1. [Install Python dependencies on Windows or macOS](docs/INSTALL.md).
+2. [Build your first Spanish form](docs/QUICKSTART.md) with a font you supply.
+3. [Install the skill in Codex or Claude Code](docs/HOSTS.md) for your own documents.
+
+The example authors a fixed sample translation and runs the complete pipeline.
+It needs no translation service or agent host. Work on other documents follows
+[SKILL.md](pdf-translate/SKILL.md) and the [job workflow](pdf-translate/references/workflow.md).
+
+## Features and boundaries
+
+| Capability | Available behavior | Boundary |
+| --- | --- | --- |
+| Text translation workflow | Extract, author mappings, rebuild and finalize | Translation must be authored by an agent or translator |
+| Layout checks | Page geometry, placement and final-output verification | Complex layouts can fail; visual review remains necessary |
+| Fillable forms | Preserve supported AcroForm mechanics and translate authored widget text | Native viewer behavior needs testing on the actual document |
+| Font diagnostics | Coverage audit and candidate comparison | User supplies permitted fonts; coverage does not prove shaping |
+| Translation QA | Diagnostics for authored text, controls and consistency | Automated QA does not establish correct meaning |
+| Delivery evidence | Hash-bound delivery status and comparison HTML | Unperformed human reviews remain outstanding |
+| Reproducible example | Source-generated Spanish form and CI regression | Synthetic success is not broad document qualification |
+
+See the [support matrix](docs/SUPPORT.md) for document-specific limits.
+
+## Evidence and review
 
 The [sample generator](examples/make_example.py) creates a local, synthetic form
 from source. No PDFs or fonts are distributed here. Use the generated form for

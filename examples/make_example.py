@@ -20,6 +20,9 @@ def main():
         field.field_label = 'Full name'
         field.field_type = pymupdf.PDF_WIDGET_TYPE_TEXT
         field.rect = pymupdf.Rect(72, 140, 340, 164)
+        field.border_width = 1
+        field.border_color = (0.3, 0.3, 0.3)
+        field.fill_color = (0.96, 0.96, 0.96)
         field.text_font = 'Helv'
         field.text_fontsize = 11
         page.add_widget(field)

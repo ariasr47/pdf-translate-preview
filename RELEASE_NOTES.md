@@ -1,3 +1,11 @@
+# Onboarding maintenance (runtime version 55 unchanged)
+
+Adds a feature table, a complete source-generated Spanish form tutorial, and
+Codex/Claude Code installation paths. Public tests execute the documented tutorial,
+exercise field save/reopen and overwrite refusal, and check local Markdown link
+targets. No PDFs or fonts are distributed. Automated results do not complete
+linguistic, accessibility or native-viewer qualification.
+
 # 55.0.0 — authored-text diagnostics and font comparison
 
 Version 55 reports unsupported authored C0/C1 controls with exact Unicode code

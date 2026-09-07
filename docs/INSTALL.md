@@ -1,10 +1,17 @@
 # Local installation
 
+On the public GitHub repository, choose **Code → Download ZIP**, then extract it.
+Use the full source preview for this guide. The CI runtime archive contains the
+installable skill only; it does not include these root-level examples and tools.
+
 Use a separate Python virtual environment and the complete source tree. Commands
-below run from the directory containing this README's parent folder and
-`pdf-translate/`. Python 3.10+ is the declared requirement; the actual local
-reference checks used Windows and Python 3.14. macOS commands are a qualification
-protocol and have not been executed by the maintainer for this preview.
+below run from the extracted public preview root containing `README.md` and
+`pdf-translate/`. Python 3.10+ is required. Automated CI exercises Windows, macOS
+and Linux on Python 3.10 and 3.14; local reference checks used Windows. Manual
+macOS Terminal, agent-host and native-viewer qualification remain pending.
+
+After imports and inventory checks pass, follow the [first Spanish form](QUICKSTART.md)
+and the [Codex or Claude Code installation guide](HOSTS.md).
 
 ## Windows PowerShell
 
