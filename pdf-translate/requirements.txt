@@ -9,5 +9,5 @@
 # combination has been exercised. constraints-reference.txt records the
 # direct versions tested locally; CI records what each job actually resolves.
 pymupdf>=1.27.1,<1.30
-pikepdf>=10.5,<11
+pikepdf>=10.13.0.post1,<11
 fonttools>=4.40,<5

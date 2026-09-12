@@ -1,5 +1,5 @@
 # Exact locally qualified direct floors exercised by the public minimum-dependency CI job.
 # Use with requirements.txt; this is not a complete transitive lock file.
 PyMuPDF==1.27.1
-pikepdf==10.5.0
+pikepdf==10.13.0.post1
 fonttools==4.40.0
